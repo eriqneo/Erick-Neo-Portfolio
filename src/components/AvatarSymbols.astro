@@ -1,0 +1,20 @@
+---
+/**
+ * Dot-portrait halftone defined once per page as two <symbol>s (dark-mode and light-mode
+ * radii). Every <Avatar> references them with <use>, so dots aren't repeated in the DOM.
+ */
+import avatar from '../data/avatar.json';
+
+const { cols, rows, dots } = avatar;
+const dark = dots.filter((d) => d[2] > 0);
+const light = dots.filter((d) => d[3] > 0);
+---
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="avatar-dk" viewBox={`0 0 ${cols} ${rows}`}>
+    {dark.map(([c, r, rd]) => <circle cx={c + 0.5} cy={r + 0.5} r={rd} />)}
+  </symbol>
+  <symbol id="avatar-lt" viewBox={`0 0 ${cols} ${rows}`}>
+    {light.map(([c, r, , rl]) => <circle cx={c + 0.5} cy={r + 0.5} r={rl} />)}
+  </symbol>
+</svg>

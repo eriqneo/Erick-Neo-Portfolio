@@ -1,0 +1,324 @@
+---
+import Headline from './Headline.astro';
+import HeroCtas from './HeroCtas.astro';
+import Portrait from './Portrait.astro';
+import Globe from './Globe.astro';
+import Avatar from './Avatar.astro';
+import type { HeroVariant } from '../scripts/hero-chart';
+
+interface Props {
+  /** A · Clusters (default), B · Forecast, C · Pulse */
+  variant?: HeroVariant;
+}
+const { variant = 'A' } = Astro.props;
+const sub = 'I architect intelligent systems and turn raw numbers into your most unfair business advantage.';
+---
+
+{
+  variant === 'A' && (
+    <header id="top" class="hero hero--a">
+      <canvas class="hero__canvas" data-hero-chart data-variant="A" aria-hidden="true" />
+      <div class="hero__fade" aria-hidden="true" />
+      <div class="fig-caption" aria-hidden="true">
+        <span data-scramble>FIG. 01 — EVERY CLUSTER IS A PROBLEM SOLVED</span>
+        <span data-scramble>Move through the data ↗</span>
+      </div>
+      <div class="hero__content">
+        <div class="hero__meta">
+          <Avatar size="48px" decorative />
+        </div>
+        <h1 class="hero__h1">
+          <Headline />
+        </h1>
+        <div class="hero__row">
+          <p class="hero__sub">{sub}</p>
+          <HeroCtas />
+        </div>
+      </div>
+      <div class="corners">
+        <span class="corner" data-scatter>AI Engineer · Nairobi, Kenya</span>
+        <span class="corner corner--r">
+          <Globe />
+          <span data-scatter>working with clients worldwide</span>
+        </span>
+      </div>
+    </header>
+  )
+}
+
+{
+  variant === 'B' && (
+    <header id="top" class="hero hero--b">
+      <div class="hero-b__top">
+        <div class="hero-b__text">
+          <span class="hero__meta">Erick Neo — AI Engineer, data analyst at heart</span>
+          <h1 class="hero__h1 hero__h1--b">
+            <Headline />
+          </h1>
+          <p class="hero__sub hero__sub--wide">{sub}</p>
+          <HeroCtas />
+        </div>
+        <div class="hero-b__portrait">
+          <Portrait loading="eager" />
+        </div>
+      </div>
+      <div class="hero-b__chart">
+        <canvas class="hero__canvas" data-hero-chart data-variant="B" aria-hidden="true" />
+        <span class="hero-b__caption" aria-hidden="true">
+          FIG. 01 — ACTUAL VS. FORECAST · SCRUB WITH YOUR CURSOR
+        </span>
+      </div>
+    </header>
+  )
+}
+
+{
+  variant === 'C' && (
+    <header id="top" class="hero hero--c">
+      <canvas class="hero__canvas hero-c__canvas" data-hero-chart data-variant="C" aria-hidden="true" />
+      <span class="status status--c">Erick Neo · AI Engineer</span>
+      <h1 class="hero__h1 hero__h1--c">
+        <Headline />
+      </h1>
+      <p class="hero__sub hero__sub--c">{sub}</p>
+      <HeroCtas centered solidOutline />
+    </header>
+  )
+}
+
+<script>
+  import { initHeroChart, type HeroVariant } from '../scripts/hero-chart';
+  import { initScatter } from '../scripts/scatter';
+
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-hero-chart]');
+  if (canvas) initHeroChart(canvas, (canvas.dataset.variant as HeroVariant) || 'A');
+
+  const hero = document.querySelector<HTMLElement>('.hero--a');
+  if (hero) initScatter(hero);
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+
+  .hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mut);
+  }
+
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    color: var(--fg);
+  }
+
+  .hero__h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(56px, 10.5vw, 184px);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    text-wrap: balance;
+  }
+
+  .hero__sub {
+    margin: 0;
+    max-width: 540px;
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.45;
+    color: var(--fg2);
+    text-wrap: pretty;
+  }
+
+  /* ---- A · Clusters ---- */
+  .hero--a {
+    min-height: calc(100vh - 62px);
+    min-height: calc(100svh - 62px);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(160px, 26vh, 300px) var(--pad-x) clamp(16px, 2vw, 28px);
+    overflow: hidden;
+  }
+
+  /* On short, wide screens cap by height too, so the corner lines start above the fold. */
+  .hero--a .hero__h1 {
+    font-size: clamp(56px, min(10.5vw, 19vh), 184px);
+  }
+
+  .corners {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    margin-top: clamp(20px, 2.5vw, 40px);
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mut);
+  }
+
+  .corner {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+
+  .corner--r {
+    color: var(--fg);
+  }
+
+  .hero__fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60%;
+    background: linear-gradient(to top, var(--bg) 20%, transparent);
+    pointer-events: none;
+  }
+
+  .hero__content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 3vw, 34px);
+    max-width: 1440px;
+  }
+
+  .hero__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 24px 48px;
+    align-items: end;
+  }
+
+  /* ---- B · Forecast ---- */
+  .hero--b {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(32px, 4vw, 56px);
+    padding: clamp(48px, 7vw, 96px) var(--pad-x) clamp(32px, 4vw, 48px);
+  }
+
+  .hero-b__top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px clamp(32px, 5vw, 80px);
+    align-items: flex-end;
+  }
+
+  .hero-b__text {
+    flex: 2 1 560px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 3vw, 32px);
+    min-width: 0;
+  }
+
+  .hero__h1--b {
+    font-size: clamp(52px, 8.4vw, 150px);
+  }
+
+  .hero__sub--wide {
+    max-width: 560px;
+  }
+
+  .hero-b__portrait {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    flex: 1 1 280px;
+    max-width: 420px;
+    margin-left: auto;
+    border-radius: var(--r-portrait);
+    overflow: hidden;
+    background: #0b0b0b;
+  }
+
+  .hero-b__portrait :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-b__chart {
+    position: relative;
+    height: clamp(200px, 28vh, 300px);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .hero-b__caption {
+    position: absolute;
+    top: 12px;
+    left: 0;
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--mut);
+    letter-spacing: 0.05em;
+    pointer-events: none;
+  }
+
+  /* ---- C · Pulse ---- */
+  .hero--c {
+    min-height: calc(100vh - 62px);
+    min-height: calc(100svh - 62px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    gap: clamp(22px, 3vw, 34px);
+    padding: clamp(72px, 12vh, 140px) var(--pad-x) 0;
+    overflow: hidden;
+  }
+
+  .hero-c__canvas {
+    inset: auto 0 0 0;
+    height: 48%;
+  }
+
+  .status--c {
+    position: relative;
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .hero__h1--c {
+    position: relative;
+    max-width: 1300px;
+    font-size: clamp(52px, 9.6vw, 168px);
+  }
+
+  .hero__sub--c {
+    position: relative;
+    max-width: 560px;
+  }
+</style>

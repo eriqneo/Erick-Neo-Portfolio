@@ -1,0 +1,88 @@
+---
+import { stackGroups } from '../data/stack';
+---
+
+<section id="stack" class="section" aria-labelledby="stack-title">
+  <div class="section-head stack__head">
+    <span class="eyebrow">03 — Skills &amp; stack</span>
+    <h2 id="stack-title" class="h2" data-reveal data-scrub>The tools I cut and stitch with.</h2>
+  </div>
+  <div class="stack__grid">
+    {
+      stackGroups.map((g) => (
+        <div class="group" data-reveal>
+          <div class="group__head">
+            <h3>{g.title}</h3>
+            <span class="group__count">{String(g.items.length).padStart(2, '0')}</span>
+          </div>
+          <ul>
+            {g.items.map((it) => (
+              <li>
+                <span>{it.name}</span>
+                <span class="group__note">{it.note}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .stack__head {
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+
+  .stack__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: clamp(32px, 4vw, 56px);
+  }
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--fg);
+  }
+
+  .group__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  h3 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+  }
+
+  .group__count,
+  .group__note {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--mut);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 17px;
+  }
+</style>

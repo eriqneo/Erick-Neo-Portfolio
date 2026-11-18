@@ -1,0 +1,554 @@
+---
+/**
+ * Services as a playing-card deck (scripts/deck.ts). Phones / reduced motion: a static grid
+ * of face-up cards. The previous row layout lives in ServicesRows.astro.
+ */
+import Suit from './Suit.astro';
+import Logo from './Logo.astro';
+import ProjectMedia from './ProjectMedia.astro';
+import { services } from '../data/services';
+import { stackGroups } from '../data/stack';
+import { allProjects, projectUrl } from '../data/projects';
+
+// Resolve each service's side-panel "reflection" from existing content (fail loudly on typos).
+const stackItems = stackGroups.flatMap((g) => g.items);
+const reflections = services.map((s) => ({
+  tools: s.tools.map((name) => {
+    const it = stackItems.find((x) => x.name === name);
+    if (!it) throw new Error(`services.ts: unknown stack item "${name}"`);
+    return it;
+  }),
+  work: s.work.map((slug) => {
+    const p = allProjects.find((x) => x.slug === slug);
+    if (!p) throw new Error(`services.ts: unknown project slug "${slug}"`);
+    return p;
+  }),
+}));
+---
+
+<section id="services" class="section services" aria-labelledby="services-title" data-flip>
+  <div class="section-head services__head">
+    <span class="eyebrow">01 — Services</span>
+    <h2 id="services-title" class="h2" data-reveal data-scrub>
+      Tailored to your data, <span class="serif-i">never off the rack.</span>
+    </h2>
+  </div>
+
+  <div class="deck" data-deck style={`--n:${services.length}`}>
+    <div class="deck__track" data-deck-track>
+      <div class="deck__stage" data-deck-stage>
+        <div class="dside dside--left">
+          {
+            services.map((s, i) => (
+              <div class:list={['dpanel', { 'is-on': i === 0 }]} data-deck-panel={i}>
+                <span class="dpanel__num" aria-hidden="true" style="--k:0">
+                  {s.n}
+                </span>
+                <span class="label dpanel__label" style="--k:1">
+                  03 — Skills &amp; stack
+                </span>
+                <ul class="dpanel__tools">
+                  {reflections[i].tools.map((t, k) => (
+                    <li style={`--k:${k + 2}`}>
+                      <span>{t.name}</span>
+                      <span class="dpanel__note">{t.note}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="deck__center">
+        <div class="deck__pager">
+          {
+            services.map((s, i) => (
+              <button type="button" class="deck__go" data-deck-go aria-label={s.title} aria-current={i === 0 ? 'step' : undefined}>
+                <Suit kind={s.suit} />
+              </button>
+            ))
+          }
+        </div>
+
+        <ol class="deck__cards">
+          {
+            services.map((s, i) => (
+              <li class:list={['dcard', { 'is-active': i === 0 }]} data-deck-card>
+                <div class="dcard__face dcard__front">
+                  <div class="dcard__corner">
+                    <span class="dcard__n">{s.n}</span>
+                    <Suit kind={s.suit} class="dcard__suit" />
+                  </div>
+                  <h3 class="dcard__title">{s.title}</h3>
+                  <p class="dcard__body">{s.body}</p>
+                  <ul class="dcard__tags">
+                    {s.tags.map((t) => (
+                      <li>{t}</li>
+                    ))}
+                  </ul>
+                  <div class="dcard__corner dcard__corner--flip" aria-hidden="true">
+                    <span class="dcard__mini">{s.title}</span>
+                    <Suit kind={s.suit} class="dcard__suit" />
+                  </div>
+                </div>
+                <div class="dcard__face dcard__back" aria-hidden="true">
+                  <Logo class="dcard__mono" />
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+        </div>
+
+        <div class="dside dside--right">
+          {
+            services.map((s, i) => (
+              <div class:list={['dpanel', { 'is-on': i === 0 }]} data-deck-panel={i}>
+                <span class="label dpanel__label" style="--k:0">
+                  02 — Selected work
+                </span>
+                <ul class="dpanel__work">
+                  {reflections[i].work.map((p, k) => (
+                    <li style={`--k:${k + 1}`}>
+                      <a href={projectUrl(p)} class="dwork">
+                        <ProjectMedia src={p.image} sizes="160px" class="dwork__media" />
+                        <span class="dwork__text">
+                          <span class="dwork__title">{p.title}</span>
+                          <span class="dwork__kind">
+                            {p.n} · {p.kind}
+                          </span>
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initDeck } from '../scripts/deck';
+
+  document.querySelectorAll<HTMLElement>('[data-deck]').forEach(initDeck);
+</script>
+
+<style>
+  .services__head {
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+
+  /* Card width and fan spread (% of card width per step) — read by scripts/deck.ts too. */
+  .deck {
+    --cw: min(340px, 30vw);
+    --fan: 34;
+  }
+
+  @media (min-width: 1100px) {
+    .deck {
+      /* side panels are showing: slightly smaller card, tighter fan, more room either side */
+      --cw: min(340px, 25vw);
+      --fan: 20;
+    }
+  }
+
+  /* ---------- Static (phones, reduced motion, no JS): face-up grid ---------- */
+  .deck__pager {
+    display: none;
+  }
+
+  .deck__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dcard {
+    position: relative;
+  }
+
+  .dcard__face {
+    border-radius: 18px;
+  }
+
+  .dcard__front {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 100%;
+    padding: 22px 22px 56px;
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .dcard__back {
+    display: none;
+  }
+
+  .dcard__corner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dcard__n {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    color: var(--acc);
+  }
+
+  .dcard :global(.dcard__suit) {
+    font-size: 22px;
+  }
+
+  .dcard__title {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(24px, 2.2vw, 30px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .dcard__body {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--bg) 78%, transparent);
+    text-wrap: pretty;
+  }
+
+  .dcard__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .dcard__tags li {
+    padding: 5px 10px;
+    border: 1px solid color-mix(in srgb, var(--bg) 22%, transparent);
+    border-radius: var(--r-pill);
+    font-family: var(--ff-mono);
+    font-size: 11.5px;
+  }
+
+  /* Playing-card mirror: title + suit upside-down in the bottom corner. */
+  .dcard__corner--flip {
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 18px;
+    transform: rotate(180deg);
+  }
+
+  .dcard__mini {
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- Live deck (≥720px, motion allowed) ---------- */
+  .deck:global(.is-live) .deck__track {
+    /* one viewport of travel per card, plus the pinned stage itself */
+    height: calc(var(--n) * 80vh + 100vh);
+  }
+
+  .dside {
+    display: none;
+  }
+
+  .deck:global(.is-live) .deck__stage {
+    position: sticky;
+    top: var(--nav-offset);
+    height: calc(100vh - var(--nav-offset));
+    height: calc(100svh - var(--nav-offset));
+    display: grid;
+    /* centre column reserves the fan: card + two fan steps each side + tilt margin */
+    grid-template-columns: 1fr calc(var(--cw) * (1 + var(--fan) * 0.04) + 48px) 1fr;
+    align-items: center;
+    gap: clamp(20px, 2.5vw, 48px);
+  }
+
+  .deck__center {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(20px, 3vh, 36px);
+  }
+
+  /* ---------- Arrival: the deck rises + zooms in, panels slide in from the sides ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .deck:global(.is-live) .deck__cards,
+    .deck:global(.is-live) .deck__pager,
+    .deck:global(.is-live) .dside {
+      transition:
+        transform 1.3s var(--ease-out),
+        opacity 0.8s ease;
+    }
+
+    .deck:global(.is-live):not(:global(.is-arrived)) .deck__cards {
+      transform: translateY(16vh) rotate(-7deg) scale(0.78);
+      opacity: 0;
+    }
+
+    .deck:global(.is-live):not(:global(.is-arrived)) .deck__pager {
+      transform: translateY(12px);
+      opacity: 0;
+    }
+
+    .deck:global(.is-live):not(:global(.is-arrived)) .dside--left {
+      transform: translateX(-48px);
+      opacity: 0;
+    }
+
+    .deck:global(.is-live):not(:global(.is-arrived)) .dside--right {
+      transform: translateX(48px);
+      opacity: 0;
+    }
+
+    .deck:global(.is-live.is-arrived) .dside {
+      transition-delay: 0.25s;
+    }
+
+    .deck:global(.is-live.is-arrived) .deck__pager {
+      transition-delay: 0.5s;
+    }
+  }
+
+  /* ---------- Side panels: a reflection of the face-up card (wide screens) ---------- */
+  @media (min-width: 1100px) {
+    .deck:global(.is-live) .dside {
+      display: grid; /* panels stack in one cell and cross-fade */
+      align-items: center;
+    }
+  }
+
+  .dside--left {
+    grid-column: 1;
+    justify-self: end;
+    width: min(100%, 320px);
+  }
+
+  .dside--right {
+    grid-column: 3;
+    justify-self: start;
+    width: min(100%, 340px);
+  }
+
+  .dpanel {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    pointer-events: none;
+  }
+
+  .dpanel:global(.is-on) {
+    pointer-events: auto;
+  }
+
+  /* Items leave quickly together, then arrive line by line. */
+  .dpanel > *,
+  .dpanel li {
+    opacity: 0;
+    transform: translateY(18px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.35s ease;
+  }
+
+  .dpanel:global(.is-on) > *,
+  .dpanel:global(.is-on) li {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.6s var(--ease-out),
+      transform 0.8s var(--ease-out);
+    transition-delay: calc(0.25s + var(--k, 0) * 70ms);
+  }
+
+  /* lists themselves stay put; their items animate */
+  .dpanel > ul {
+    opacity: 1;
+    transform: none;
+  }
+
+  .dpanel__num {
+    font-weight: 600;
+    font-size: clamp(96px, 9vw, 160px);
+    line-height: 0.8;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--mut);
+  }
+
+  .dpanel__label {
+    margin-top: 8px;
+  }
+
+  .dpanel__tools,
+  .dpanel__work {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dpanel__tools li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 17px;
+  }
+
+  .dpanel__note {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--mut);
+  }
+
+  .dpanel__work {
+    gap: 12px;
+  }
+
+  .dwork {
+    display: grid;
+    grid-template-columns: 132px 1fr;
+    gap: 14px;
+    align-items: center;
+    color: var(--fg);
+  }
+
+  .dwork:hover {
+    color: var(--acc);
+  }
+
+  .dwork :global(.dwork__media) {
+    border-radius: 10px;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .dwork:hover :global(.dwork__media) {
+    transform: scale(0.97);
+  }
+
+  .dwork__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .dwork__title {
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  .dwork__kind {
+    font-family: var(--ff-mono);
+    font-size: 11.5px;
+    color: var(--mut);
+  }
+
+  .deck:global(.is-live) .deck__pager {
+    display: flex;
+    gap: 6px;
+  }
+
+  .deck__go {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    color: var(--mut);
+    font-size: 16px;
+    transition:
+      background-color 0.35s var(--ease-out),
+      color 0.35s var(--ease-out),
+      border-color 0.35s var(--ease-out);
+  }
+
+  .deck__go:hover {
+    color: var(--fg);
+    border-color: var(--fg);
+  }
+
+  .deck__go:global(.is-active) {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+
+  .deck:global(.is-live) .deck__cards {
+    position: relative;
+    display: block;
+    width: var(--cw);
+    aspect-ratio: 5 / 6.6;
+    max-height: calc(100svh - var(--nav-offset) - 140px);
+    perspective: 1400px;
+    transform-style: preserve-3d;
+  }
+
+  .deck:global(.is-live) .dcard {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+  }
+
+  .deck:global(.is-live) .dcard__face {
+    position: absolute;
+    inset: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .deck:global(.is-live) .dcard__front {
+    min-height: 0;
+  }
+
+  .deck:global(.is-live) .dcard__back {
+    display: grid;
+    place-items: center;
+    transform: rotateY(180deg);
+    background:
+      radial-gradient(circle, color-mix(in srgb, var(--bg) 26%, transparent) 1.3px, transparent 1.6px) 0 0 / 12px 12px,
+      var(--fg);
+    color: var(--bg);
+  }
+
+  /* inset frame on the back, like a printed card */
+  .deck:global(.is-live) .dcard__back::before {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid color-mix(in srgb, var(--bg) 28%, transparent);
+    border-radius: 10px;
+  }
+
+  .dcard__back :global(.dcard__mono) {
+    position: relative;
+    height: 56px;
+    padding: 14px 16px;
+    box-sizing: content-box;
+    background: var(--fg);
+    border-radius: 10px;
+  }
+</style>

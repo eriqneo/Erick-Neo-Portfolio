@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import ProofStrip from '../components/ProofStrip.astro';
+import FeaturedReel from '../components/FeaturedReel.astro';
+import Services from '../components/Services.astro';
+import Playground from '../components/Playground.astro';
+import Work from '../components/Work.astro';
+import Stack from '../components/Stack.astro';
+import Experience from '../components/Experience.astro';
+import NextChapter from '../components/NextChapter.astro';
+import type { HeroVariant } from '../scripts/hero-chart';
+
+/** Build-time hero choice: 'A' · Clusters (default), 'B' · Forecast, 'C' · Pulse. */
+const HERO_VARIANT = 'A' as HeroVariant;
+---
+
+<Layout>
+  <Hero variant={HERO_VARIANT} />
+  <FeaturedReel />
+  <ProofStrip />
+  <Services />
+  <Playground />
+  <Work />
+  <Stack />
+  <Experience showPortrait={HERO_VARIANT !== 'B'} />
+  <NextChapter />
+</Layout>

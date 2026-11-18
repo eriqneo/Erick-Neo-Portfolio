@@ -1,0 +1,163 @@
+---
+/**
+ * "Made to measure" closing link to /work. Big words build in on scroll; small mono
+ * whispers sit in the gaps. The link's accessible name is the plain sentence.
+ */
+type Piece = { t: string; kind: 'w' | 'x' | 'arrow' };
+const lines: Piece[][] = [
+  [
+    { t: 'See', kind: 'w' },
+    { t: 'the', kind: 'w' },
+    { t: 'work,', kind: 'w' },
+    { t: 'Bespoke', kind: 'x' },
+  ],
+  [
+    { t: 'made', kind: 'w' },
+    { t: 'Fitted', kind: 'x' },
+    { t: 'to', kind: 'w' },
+  ],
+  [
+    { t: 'measure', kind: 'w' },
+    { t: 'Shipped', kind: 'x' },
+    { t: '→', kind: 'arrow' },
+  ],
+];
+const sentence = 'See the work, made to measure';
+---
+
+<section class="nc" data-next-chapter aria-labelledby="nc-label">
+  <div class="nc__stage">
+    <span id="nc-label" class="eyebrow nc__label">FIG. 03 — The collection</span>
+    <a href="/work/" class="nc__link">
+      <span class="sr-only">{sentence}</span>
+      <span class="nc__lines" aria-hidden="true">
+        {
+          lines.map((line) => (
+            <span class="nc__line">
+              {line.map((p) => (
+                <span class:list={['nc__mask', `nc__mask--${p.kind}`]}>
+                  <span class:list={['nc__p', `nc__p--${p.kind}`]} data-nc>
+                    {p.t}
+                  </span>
+                </span>
+              ))}
+            </span>
+          ))
+        }
+      </span>
+    </a>
+  </div>
+</section>
+
+<script>
+  import { initNextChapter } from '../scripts/next-chapter';
+
+  const el = document.querySelector<HTMLElement>('[data-next-chapter]');
+  if (el) initNextChapter(el);
+</script>
+
+<style>
+  .nc {
+    position: relative;
+    height: 220vh;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nc:global(.is-static) {
+    height: auto;
+  }
+
+  .nc__stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: clamp(24px, 4vw, 48px);
+    padding: 0 var(--pad-x);
+    overflow: hidden;
+  }
+
+  .nc:global(.is-static) .nc__stage {
+    position: static;
+    height: auto;
+    padding: var(--pad-y) var(--pad-x);
+  }
+
+  .nc__label {
+    align-self: center;
+  }
+
+  .nc__link {
+    align-self: center;
+    color: var(--fg);
+  }
+
+  .nc__link:hover {
+    color: var(--fg);
+  }
+
+  .nc__lines {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: 600;
+    /* Capped by height too, so all three lines fit the pinned stage on short screens. */
+    font-size: clamp(48px, min(12vw, 20vh), 208px);
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+  }
+
+  .nc__line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0 0.22em;
+    white-space: nowrap;
+  }
+
+  /* Masks clip each piece as it rises in. */
+  .nc__mask {
+    display: inline-block;
+    overflow: visible; /* words fly in from the sides — no clipping */
+    padding: 0.04em 0.04em 0.1em;
+    margin: -0.04em -0.04em -0.1em;
+  }
+
+  .nc__p {
+    display: inline-block;
+    transform-origin: 50% 80%;
+  }
+
+  .nc__p--x {
+    font-family: var(--ff-mono);
+    font-size: clamp(11px, 0.9vw, 14px);
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mut);
+    padding: 0 clamp(4px, 1vw, 16px);
+  }
+
+  .nc__p--arrow {
+    color: var(--acc);
+    transition: translate 0.7s var(--ease-out);
+  }
+
+  .nc__link:is(:hover, :focus-visible) .nc__p--arrow {
+    translate: 0.15em 0;
+  }
+
+  .nc__link:is(:hover, :focus-visible) .nc__p--w {
+    color: var(--acc);
+    transition: color 0.3s ease;
+  }
+
+  @media (max-width: 719.98px) {
+    .nc__p--x {
+      display: none;
+    }
+  }
+</style>

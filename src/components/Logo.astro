@@ -1,0 +1,92 @@
+---
+/**
+ * Dot-matrix "EN" monogram. Regular dots use currentColor, accent dots use --acc,
+ * so it follows the theme (and the backdrop flip) automatically.
+ *
+ * Motion (off under reduced motion):
+ *  - load: dots resolve in column by column
+ *  - hover/focus of the nearest link: a ripple runs across the columns
+ */
+import { logoGeometry } from '../data/logo';
+
+interface Props {
+  /** Fatter dots for small sizes (nav, favicon-scale). */
+  small?: boolean;
+  class?: string;
+  /** Accessible name. Omit when visible text already names the link (mark is then hidden). */
+  title?: string;
+}
+const { small = false, class: className, title } = Astro.props;
+const { dots, width, height, r } = logoGeometry(small);
+---
+
+<svg
+  class:list={['logo', className]}
+  viewBox={`0 0 ${width} ${height}`}
+  role={title ? 'img' : undefined}
+  aria-label={title}
+  aria-hidden={title ? undefined : 'true'}
+  focusable="false"
+>
+  {
+    dots.map((d) => (
+      <circle
+        class:list={['logo__dot', { 'logo__dot--acc': d.accent }]}
+        cx={d.x}
+        cy={d.y}
+        r={d.accent ? r.accent : r.regular}
+        style={`--c:${d.col}`}
+      />
+    ))
+  }
+</svg>
+
+<style>
+  .logo {
+    display: block;
+    height: 1em;
+    width: auto;
+    overflow: visible;
+  }
+
+  .logo__dot {
+    fill: currentColor;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  .logo__dot--acc {
+    fill: var(--acc);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .logo__dot {
+      transition:
+        opacity 0.6s var(--ease-out),
+        transform 0.8s var(--ease-out);
+      transition-delay: calc(var(--c) * 28ms + 120ms);
+    }
+
+    :global(.js:not(.is-loaded)) .logo__dot {
+      opacity: 0;
+      transform: scale(0.2);
+    }
+
+    :global(:is(a, button):is(:hover, :focus-visible)) .logo__dot {
+      animation: dot-ripple 0.7s var(--ease-out) both;
+      animation-delay: calc(var(--c) * 22ms);
+    }
+  }
+
+  @keyframes dot-ripple {
+    0% {
+      transform: scale(1);
+    }
+    35% {
+      transform: scale(0.35);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import WorkRow from '../../components/WorkRow.astro';
+import { tracks, allProjects } from '../../data/projects';
+import { site } from '../../data/site';
+---
+
+<Layout title={`Work — ${site.name}`} description={tracks.map((t) => t.intro).join(' ')}>
+  <header id="top" class="work-hero">
+    <span class="eyebrow">02 — Selected work</span>
+    <h1 class="work-hero__h1" data-arrive="words">
+      Work <sup class="work-hero__count">{String(allProjects.length).padStart(2, '0')}</sup>
+    </h1>
+  </header>
+
+  {
+    tracks.map((t, i) => (
+      <section class="track" aria-labelledby={`track-${t.id}`}>
+        <div class="track__head">
+          <h2 id={`track-${t.id}`} class="track__label">
+            <span class="track__n">{String(i + 1).padStart(2, '0')}</span>
+            {t.label}
+            <span class="track__count">{t.projects.length}</span>
+          </h2>
+          <p class="track__intro">{t.intro}</p>
+        </div>
+        <div class="track__rows">
+          {t.projects.map((p) => (
+            <WorkRow project={p} />
+          ))}
+        </div>
+        <div class="track__more">
+          <a href={t.moreHref} target="_blank" rel="noopener" class="btn btn--outline">
+            {t.moreLabel} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+    ))
+  }
+</Layout>
+
+<style>
+  .work-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: clamp(72px, 12vw, 180px) var(--pad-x) clamp(40px, 6vw, 80px);
+  }
+
+  .work-hero__h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(56px, 10.5vw, 184px);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .work-hero__count {
+    font-family: var(--ff-mono);
+    font-size: 0.14em;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--acc);
+    vertical-align: top;
+    position: relative;
+    top: 0.6em;
+  }
+
+  .track {
+    padding: 0 var(--pad-x) var(--pad-y);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .track + .track {
+    padding-top: var(--pad-y);
+  }
+
+  .track__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px 48px;
+    margin-bottom: clamp(24px, 3vw, 40px);
+  }
+
+  .track__label {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(22px, 2.2vw, 30px);
+    letter-spacing: -0.02em;
+  }
+
+  .track__n,
+  .track__count {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0;
+    color: var(--mut);
+  }
+
+  .track__n {
+    color: var(--acc);
+  }
+
+  .track__intro {
+    margin: 0;
+    max-width: 520px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--fg2);
+    text-wrap: pretty;
+  }
+
+  .track__rows {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .track__more {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(40px, 5vw, 64px);
+  }
+</style>

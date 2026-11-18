@@ -1,0 +1,163 @@
+---
+/**
+ * 3D portrait stage. Layers, back to front (translateZ):
+ *   echo  -90px  dot-matrix "data double" (the Avatar), eyes follow the cursor
+ *   slab  -14px  card thickness, visible on the edges when tilted
+ *   photo   0    the portrait; its lower edge dissolves into halftone dots
+ *   chip   +40px     floating live Nairobi clock
+ * Tilt comes from scripts/portrait-3d.ts (pointer + scroll); static under reduced motion.
+ */
+import Portrait from './Portrait.astro';
+import Avatar from './Avatar.astro';
+
+// Halftone dissolve mask (viewBox matches the 4:5 card, so dots stay round).
+const COLS = 40;
+const TOP = 33; // solid down to here (of 50)
+const rows: string[] = [];
+for (let y = TOP + 0.5; y < 50; y += 1) {
+  const t = (y - TOP) / (50 - TOP);
+  const r = (0.62 * Math.pow(1 - t, 0.9)).toFixed(3);
+  for (let x = 0.5; x < COLS; x += 1) rows.push(`<circle cx='${x}' cy='${y}' r='${r}'/>`);
+}
+const mask = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 50' preserveAspectRatio='none'><g fill='white'><rect width='40' height='${TOP}'/>${rows.join('')}</g></svg>`;
+const maskUrl = `url("data:image/svg+xml,${encodeURIComponent(mask)}")`;
+---
+
+<div class="pstage" data-portrait-3d>
+  <div class="pcard" style={`--dissolve:${maskUrl}`}>
+    <div class="player pecho" aria-hidden="true">
+      <Avatar size="100%" decorative />
+    </div>
+    <div class="player pslab" aria-hidden="true"></div>
+    <div class="player pphoto">
+      <Portrait />
+      <span class="psheen" aria-hidden="true"></span>
+    </div>
+    <span class="player pchip pchip--clock" aria-hidden="true">
+      Kenya/Nairobi · <time data-clock></time>
+    </span>
+  </div>
+</div>
+
+<script>
+  import { initPortrait3D } from '../scripts/portrait-3d';
+
+  document.querySelectorAll<HTMLElement>('[data-portrait-3d]').forEach(initPortrait3D);
+</script>
+
+<style>
+  .pstage {
+    --rx: 0deg;
+    --ry: 0deg;
+    position: relative;
+    max-width: 340px;
+    perspective: 1100px;
+    /* room for the echo + chips that float past the card edges */
+    margin: 24px 26% 24px 0;
+  }
+
+  .pcard {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+  }
+
+  .player {
+    position: absolute;
+  }
+
+  /* Data double: ghosted dot portrait behind, peeking out top-right. */
+  .pecho {
+    top: -9%;
+    right: -30%;
+    height: 72%;
+    aspect-ratio: 21 / 26;
+    transform: translateZ(-90px);
+  }
+
+  .pecho :global(.avatar) {
+    height: 100% !important;
+    color: color-mix(in srgb, var(--fg) 26%, transparent);
+  }
+
+  .pslab {
+    inset: 0;
+    border-radius: var(--r-portrait);
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    transform: translateZ(-14px);
+    /* dissolve with the photo so the whole object breaks into dots together */
+    -webkit-mask-image: var(--dissolve);
+    mask-image: var(--dissolve);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  .pphoto {
+    inset: 0;
+    border-radius: var(--r-portrait);
+    overflow: hidden;
+    background: #0b0b0b;
+    transform: translateZ(0);
+    -webkit-mask-image: var(--dissolve);
+    mask-image: var(--dissolve);
+    -webkit-mask-size: 100% 100%;
+    mask-size: 100% 100%;
+  }
+
+  .pphoto :global(picture) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Light sweeping across the "glass", following the pointer. */
+  .psheen {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--sx, 50%) var(--sy, 30%),
+      rgba(255, 255, 255, 0.22),
+      transparent 55%
+    );
+    mix-blend-mode: soft-light;
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .pstage:global(.is-hover) .psheen {
+    opacity: 1;
+  }
+
+  .pchip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: var(--r-pill);
+    background: rgba(18, 17, 15, 0.86);
+    color: #ece8e1;
+    border: 1px solid rgba(236, 232, 225, 0.14);
+    font-family: var(--ff-mono);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .pchip--clock {
+    bottom: 26%;
+    right: -22px;
+    transform: translateZ(40px);
+  }
+
+  @media (max-width: 719.98px) {
+    .pstage {
+      margin-right: 22%;
+    }
+  }
+</style>

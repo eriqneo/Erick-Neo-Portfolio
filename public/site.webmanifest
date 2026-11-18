@@ -1,0 +1,8 @@
+{
+  "name": "Erick Neo",
+  "short_name": "Erick Neo",
+  "icons": [{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }],
+  "theme_color": "#12110f",
+  "background_color": "#12110f",
+  "display": "browser"
+}

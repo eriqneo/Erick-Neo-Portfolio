@@ -1,0 +1,90 @@
+---
+// Previous Services layout (rows), kept for an easy revert. Not used by any page.
+import { services } from '../data/services';
+---
+
+<section id="services" class="section" aria-labelledby="services-title" data-flip>
+  <div class="section-head services__head">
+    <span class="eyebrow">01 — Services</span>
+    <h2 id="services-title" class="h2" data-reveal data-scrub>
+      Tailored to your data, <span class="serif-i">never off the rack.</span>
+    </h2>
+  </div>
+  <div class="services__list">
+    {
+      services.map((s) => (
+        <div class="service" data-reveal>
+          <div class="service__title">
+            <span class="service__n">{s.n}</span>
+            <h3>{s.title}</h3>
+          </div>
+          <p class="service__body">{s.body}</p>
+          <ul class="service__tags">
+            {s.tags.map((t) => (
+              <li class="tag">{t}</li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .services__head {
+    margin-bottom: clamp(40px, 6vw, 80px);
+  }
+
+  .services__list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--line);
+  }
+
+  .service {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 16px 48px;
+    padding: clamp(28px, 4vw, 48px) 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .service__title {
+    display: flex;
+    gap: 20px;
+    align-items: baseline;
+  }
+
+  .service__n {
+    font-family: var(--ff-mono);
+    font-size: 14px;
+    color: var(--acc);
+  }
+
+  h3 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(26px, 3vw, 40px);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  .service__body {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--fg2);
+    max-width: 460px;
+    text-wrap: pretty;
+  }
+
+  .service__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: flex-start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

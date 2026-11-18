@@ -1,0 +1,439 @@
+@import './tokens.css';
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: var(--nav-offset);
+  scrollbar-gutter: stable;
+  background: var(--bg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.lenis) {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--ff-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--acc);
+}
+
+::selection {
+  background: #c24d64;
+  color: #ffffff;
+}
+
+img {
+  max-width: 100%;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 100;
+  padding: 10px 16px;
+  background: var(--fg);
+  color: var(--bg);
+  border-radius: var(--r-pill);
+  font-family: var(--ff-mono);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus-visible {
+  transform: none;
+  color: var(--bg);
+}
+
+/* ---------- Shared type ---------- */
+.mono {
+  font-family: var(--ff-mono);
+}
+
+.serif-i {
+  font-family: var(--ff-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.eyebrow {
+  font-family: var(--ff-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mut);
+}
+
+.label {
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mut);
+}
+
+.h2 {
+  margin: 0;
+  font-weight: 600;
+  font-size: clamp(36px, 5vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.section {
+  padding: var(--pad-y) var(--pad-x);
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 48px;
+}
+
+.section-head > .eyebrow {
+  flex: 1 1 240px;
+}
+
+.section-head > .h2 {
+  flex: 2 1 520px;
+}
+
+.fig-caption {
+  position: absolute;
+  top: clamp(24px, 4vw, 44px);
+  left: var(--pad-x);
+  right: var(--pad-x);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--mut);
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.dot-ok {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  flex: none;
+}
+
+/* ---------- Buttons & pills ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 24px;
+  border-radius: var(--r-pill);
+  font-size: 16px;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.btn--primary {
+  background: var(--acc);
+  color: var(--onacc);
+  font-weight: 600;
+}
+
+.btn--primary:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.btn--outline {
+  border: 1px solid var(--line);
+  font-weight: 500;
+}
+
+.btn--outline:hover {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+
+.btn--ink {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+.btn--ink:hover {
+  background: var(--acc);
+  color: var(--onacc);
+}
+
+.tag {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: var(--fg2);
+}
+
+/* ---------- Rolling text ---------- */
+.roll {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 1.2;
+}
+
+.roll__l {
+  position: relative;
+  display: inline-block;
+  white-space: pre;
+  transition: transform 0.6s var(--ease-roll);
+  transition-delay: calc(var(--i, 0) * 18ms);
+}
+
+.roll__l::after {
+  content: attr(data-c);
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+
+:is(a, button):is(:hover, :focus-visible) .roll__l {
+  transform: translateY(-100%);
+}
+
+/* ---------- Headline word reveal ---------- */
+.hw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding: 0 0.04em 0.12em 0;
+  margin: 0 0.18em -0.12em 0;
+}
+
+.hw > span {
+  display: inline-block;
+  transition: transform 1.2s var(--ease-out);
+  transition-delay: var(--d, 0s);
+}
+
+.hw--serif > span {
+  font-family: var(--ff-serif);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.hw--acc > span {
+  color: var(--acc);
+}
+
+/* ---------- Motion gating ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .js:not(.is-loaded) .hw > span {
+    transform: translateY(110%);
+  }
+
+  /* Hidden until reveal.ts hands control to WAAPI (fill: both). */
+  .js [data-reveal]:not(.is-revealed) {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* ---------- Page transitions (cross-document View Transitions) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root) {
+    animation: vt-out 0.45s var(--ease-roll) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-in 0.9s var(--ease-out) both;
+  }
+
+  /* Shared project media / titles morph between list and case study. */
+  ::view-transition-group(*) {
+    animation-duration: 0.8s;
+    animation-timing-function: var(--ease-out);
+  }
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-32px);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(56px);
+  }
+}
+
+/* ---------- Media placeholder (⚠ until real screenshots exist) ---------- */
+.media {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-card);
+  overflow: hidden;
+  background: var(--bg2);
+  border: 1px solid var(--line);
+}
+
+.media > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media__ph {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 40px 40px,
+    linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 40px 40px;
+  opacity: 0.5;
+}
+
+.media__chip {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 5px 10px;
+  background: rgba(18, 17, 15, 0.84);
+  border-radius: var(--r-pill);
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  color: #ece8e1;
+  pointer-events: none;
+}
+
+.media__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #09080b;
+}
+
+/* ---------- Section arrivals (scripts/arrive.ts) ---------- */
+.aw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* room for descenders / italic overhang inside the mask */
+  padding: 0 0.04em 0.12em;
+  margin: 0 -0.04em -0.12em;
+}
+
+.aw__in {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Words rise from behind their masks, one after another. */
+  .js [data-arrive='words'] .aw__in {
+    transform: translateY(108%);
+    transition: transform 1.1s var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 55ms);
+  }
+
+  .js [data-arrive='words'].is-in .aw__in {
+    transform: none;
+  }
+
+  /* Media: the frame wipes up from the bottom while the picture zooms out. */
+  /* Specific enough to beat component hover rules (e.g. .card__media .media { transition }),
+     and carries their transform transition too so hover zooms keep working. */
+  html.js .media[data-arrive='media'] {
+    clip-path: inset(100% 0 0 0 round var(--r-card));
+    transition:
+      clip-path 1.15s var(--ease-out),
+      transform 0.9s var(--ease-out);
+  }
+
+  .js [data-arrive='media'] > :is(img, video, .media__ph) {
+    transform: scale(1.18);
+    transition: transform 1.7s var(--ease-out);
+  }
+
+  html.js .media[data-arrive='media'].is-in {
+    clip-path: inset(0 0 0 0 round var(--r-card));
+  }
+
+  .js [data-arrive='media'].is-in > :is(img, video, .media__ph) {
+    transform: none;
+  }
+}

@@ -1,0 +1,39 @@
+---
+/**
+ * Dot-matrix "suit" glyph for a service card (5×5, logo language: one wine accent dot).
+ *   ai   → node / spark
+ *   bi   → rising bars
+ *   pred → trend arrow
+ */
+interface Props {
+  kind: 'ai' | 'bi' | 'pred';
+  class?: string;
+}
+const GLYPHS: Record<Props['kind'], string[]> = {
+  ai: ['..o..', '.ooo.', 'ooAoo', '.ooo.', '..o..'],
+  bi: ['....A', '..o.o', '..o.o', 'o.o.o', 'o.o.o'],
+  pred: ['..ooA', '...oo', '..o.o', '.o...', 'o....'],
+};
+const { kind, class: className } = Astro.props;
+const dots = GLYPHS[kind].flatMap((row, y) =>
+  [...row].flatMap((ch, x) => (ch === '.' ? [] : [{ x: x + 0.5, y: y + 0.5, a: ch === 'A' }])),
+);
+---
+
+<svg class:list={['suit', className]} viewBox="0 0 5 5" aria-hidden="true" focusable="false">
+  {dots.map((d) => <circle cx={d.x} cy={d.y} r={d.a ? 0.42 : 0.36} class:list={{ 'suit--acc': d.a }} />)}
+</svg>
+
+<style>
+  .suit {
+    display: block;
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+    overflow: visible;
+  }
+
+  .suit--acc {
+    fill: var(--acc);
+  }
+</style>

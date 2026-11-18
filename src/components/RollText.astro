@@ -1,0 +1,16 @@
+---
+/**
+ * Rolling-letter hover. Letters roll up (staggered 18ms) when the nearest <a>/<button> is
+ * hovered or keyboard-focused — pure CSS, see .roll in global.css.
+ * Screen readers get the plain text; the animated letters are aria-hidden.
+ */
+interface Props {
+  text: string;
+}
+const { text } = Astro.props;
+const letters = [...text].map((c) => (c === ' ' ? ' ' : c));
+---
+
+<span class="sr-only">{text}</span><span class="roll" aria-hidden="true"
+  >{letters.map((c, i) => <span class="roll__l" style={`--i:${i}`} data-c={c}>{c}</span>)}</span
+>

@@ -1,0 +1,33 @@
+---
+import RollText from './RollText.astro';
+
+interface Props {
+  centered?: boolean;
+  solidOutline?: boolean;
+}
+const { centered = false, solidOutline = false } = Astro.props;
+---
+
+<div class="ctas" class:list={{ 'ctas--center': centered }}>
+  <a href="#contact" class="btn btn--primary" data-drawer-open
+    ><RollText text="Book a discovery call" /><span aria-hidden="true">→</span></a
+  >
+  <a href="#work" class="btn btn--outline" class:list={{ 'btn--solid': solidOutline }}
+    ><RollText text="See the work" /></a
+  >
+</div>
+
+<style>
+  .ctas {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .ctas--center {
+    justify-content: center;
+  }
+  .btn--solid {
+    background: var(--bg);
+  }
+</style>

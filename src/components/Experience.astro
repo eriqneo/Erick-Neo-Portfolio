@@ -1,0 +1,170 @@
+---
+import PortraitStage from './PortraitStage.astro';
+import { timeline } from '../data/timeline';
+import { certifications } from '../data/certifications';
+
+interface Props {
+  /** Hidden when the hero (variant B) already shows the portrait. */
+  showPortrait?: boolean;
+}
+const { showPortrait = true } = Astro.props;
+---
+
+<section id="experience" class="section" aria-labelledby="experience-title">
+  <div class="exp">
+    <div class="exp__aside">
+      <span class="eyebrow">04 — Experience</span>
+      <h2 id="experience-title" class="h2" data-arrive="words">
+        Seven years <span class="serif-i">in the data.</span>
+      </h2>
+      {showPortrait && <PortraitStage />}
+    </div>
+    <div class="exp__main">
+      <ol class="timeline">
+        {
+          timeline.map((e) => (
+            <li class="row" data-reveal>
+              <span class="row__years">{e.years}</span>
+              <div class="row__body">
+                <div class="row__head">
+                  <h3>{e.role}</h3>
+                  <span class="row__org">{e.org}</span>
+                </div>
+                <p>{e.body}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="certs">
+        <h3 class="label certs__label">Certifications</h3>
+        <ul class="certs__list">
+          {
+            certifications.map((c) => (
+              <li class="cert">
+                <span class="cert__y">{c.year}</span>
+                {c.name}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .exp {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: flex-start;
+  }
+
+  .exp__aside {
+    flex: 1 1 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .exp__main {
+    flex: 2 1 440px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .timeline {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(110px, 160px) minmax(0, 1fr);
+    gap: 16px 32px;
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .row__years {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    color: var(--mut);
+    padding-top: 6px;
+  }
+
+  .row__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .row__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px 14px;
+  }
+
+  .row h3 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(22px, 2.2vw, 30px);
+    letter-spacing: -0.02em;
+  }
+
+  .row__org {
+    font-size: 17px;
+    color: var(--acc);
+  }
+
+  .row p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--fg2);
+    max-width: 620px;
+    text-wrap: pretty;
+  }
+
+  .certs {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px 0 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .certs__label {
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .certs__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cert {
+    display: flex;
+    gap: 10px;
+    padding: 9px 14px;
+    background: var(--bg2);
+    border-radius: var(--r-pill);
+    font-size: 15px;
+  }
+
+  .cert__y {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--mut);
+    padding-top: 2px;
+  }
+</style>

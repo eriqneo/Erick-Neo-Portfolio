@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+:root,[data-theme="dark"]{--bg:#12110f;--bg2:#1c1a17;--nav:rgba(18,17,15,.8);--fg:#ece8e1;--fg2:#cfc9bf;--mut:#a9a398;--line:rgba(236,232,225,.14);--acc:#c24d64;--onacc:#ffffff}
+[data-theme="light"]{--bg:#f4f1ea;--bg2:#e8e3d9;--nav:rgba(244,241,234,.82);--fg:#171512;--fg2:#3b3731;--mut:#665f56;--line:rgba(23,21,18,.14);--acc:#7d1d32;--onacc:#ffffff}
+html{scroll-behavior:smooth}
+body{margin:0;background:#12110f;font-family:'Familjen Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:hover{color:var(--acc)}
+::selection{background:#c24d64;color:#ffffff}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" ref="{{ rootRef }}" style="min-height:100vh;background:var(--bg);color:var(--fg);transition:background .4s ease,color .4s ease">
+
+<nav style="position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px clamp(20px,4vw,56px);background:var(--nav);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)">
+  <a href="#top" style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:17px;letter-spacing:-0.01em;color:var(--fg)">
+    <span style="width:9px;height:9px;border-radius:50%;background:var(--acc)"></span>Erick Neo
+  </a>
+  <div style="display:flex;align-items:center;gap:clamp(12px,2.2vw,30px);font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-transform:uppercase;letter-spacing:0.06em">
+    <a href="#services" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="Services" hint-size="60px,16px"></dc-import></a>
+    <a href="#work" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="Work" hint-size="60px,16px"></dc-import></a>
+    <a href="#stack" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="Stack" hint-size="60px,16px"></dc-import></a>
+    <a href="#experience" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="Experience" hint-size="60px,16px"></dc-import></a>
+    <button onClick="{{ toggleTheme }}" aria-label="Toggle colour theme" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;color:var(--fg);font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-transform:uppercase;letter-spacing:0.06em" style-hover="border-color:var(--fg)">
+      <span style="width:12px;height:12px;border-radius:50%;border:1.5px solid var(--fg);background:linear-gradient(90deg,var(--fg) 50%,transparent 50%)"></span>{{ themeLabel }}
+    </button>
+    <a href="#contact" onClick="{{ openDrawer }}" style="display:flex;padding:9px 16px;background:var(--fg);color:var(--bg);border-radius:999px" style-hover="background:var(--acc);color:var(--onacc)"><dc-import name="RollText" text="Let's talk" hint-size="72px,16px"></dc-import></a>
+  </div>
+</nav>
+
+<sc-if value="{{ isA }}" hint-placeholder-val="{{ true }}">
+<header id="top" style="position:relative;min-height:calc(100vh - 62px);display:flex;flex-direction:column;justify-content:flex-end;padding:clamp(160px,26vh,300px) clamp(20px,4vw,56px) clamp(32px,5vw,64px);overflow:hidden;border-bottom:1px solid var(--line)">
+  <canvas ref="{{ canvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
+  <div style="position:absolute;left:0;right:0;bottom:0;height:60%;background:linear-gradient(to top,var(--bg) 20%,transparent);pointer-events:none"></div>
+  <div style="position:absolute;top:clamp(24px,4vw,44px);left:clamp(20px,4vw,56px);right:clamp(20px,4vw,56px);display:flex;justify-content:space-between;gap:16px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);letter-spacing:0.05em;pointer-events:none">
+    <span>FIG. 01 — EVERY CLUSTER IS A PROBLEM SOLVED</span>
+    <span>Move through the data ↗</span>
+  </div>
+  <div style="position:relative;display:flex;flex-direction:column;gap:clamp(20px,3vw,34px);max-width:1440px">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">
+      <span style="display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--fg)"><span style="width:7px;height:7px;border-radius:50%;background:#5fbf73"></span>Taking new clients</span>
+      <span>AI Engineer · Nairobi, Kenya</span>
+    </div>
+    <h1 style="margin:0;font-weight:600;font-size:clamp(56px,10.5vw,184px);line-height:0.9;letter-spacing:-0.045em;text-wrap:balance"><sc-for list="{{ headWords }}" as="w" hint-placeholder-count="5"><span style="display:inline-block;overflow:hidden;vertical-align:top;padding:0 0.04em 0.12em 0;margin:0 0.18em -0.12em 0"><span style="display:inline-block;transition:transform 1.2s cubic-bezier(.16,1,.3,1);transition-delay:{{ w.d }};transform:{{ w.t }};font-family:{{ w.ff }};font-style:{{ w.fs }};font-weight:{{ w.fw }};letter-spacing:{{ w.ls }};color:{{ w.c }}">{{ w.text }}</span></span></sc-for></h1>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:24px 48px;align-items:end">
+      <p style="margin:0;max-width:540px;font-size:clamp(18px,1.6vw,22px);line-height:1.45;color:var(--fg2);text-wrap:pretty">I architect intelligent systems and turn raw numbers into your most unfair business advantage.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <a href="#contact" onClick="{{ openDrawer }}" style="display:flex;align-items:center;gap:10px;padding:16px 24px;background:var(--acc);color:var(--onacc);border-radius:999px;font-weight:600;font-size:16px" style-hover="background:var(--fg);color:var(--bg)"><dc-import name="RollText" text="Book a discovery call" hint-size="160px,20px"></dc-import><span>→</span></a>
+        <a href="#work" style="display:flex;align-items:center;padding:16px 24px;border:1px solid var(--line);border-radius:999px;font-weight:500;font-size:16px" style-hover="border-color:var(--fg);color:var(--fg)"><dc-import name="RollText" text="See the work" hint-size="96px,20px"></dc-import></a>
+      </div>
+    </div>
+  </div>
+</header>
+</sc-if>
+
+<sc-if value="{{ isB }}" hint-placeholder-val="{{ false }}">
+<header id="top" style="display:flex;flex-direction:column;gap:clamp(32px,4vw,56px);padding:clamp(48px,7vw,96px) clamp(20px,4vw,56px) clamp(32px,4vw,48px);border-bottom:1px solid var(--line)">
+  <div style="display:flex;flex-wrap:wrap;gap:40px clamp(32px,5vw,80px);align-items:flex-end">
+    <div style="flex:2 1 560px;display:flex;flex-direction:column;gap:clamp(20px,3vw,32px);min-width:0">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">Erick Neo — AI Engineer, data analyst at heart</span>
+      <h1 style="margin:0;font-weight:600;font-size:clamp(52px,8.4vw,150px);line-height:0.9;letter-spacing:-0.045em;text-wrap:balance"><sc-for list="{{ headWords }}" as="w" hint-placeholder-count="5"><span style="display:inline-block;overflow:hidden;vertical-align:top;padding:0 0.04em 0.12em 0;margin:0 0.18em -0.12em 0"><span style="display:inline-block;transition:transform 1.2s cubic-bezier(.16,1,.3,1);transition-delay:{{ w.d }};transform:{{ w.t }};font-family:{{ w.ff }};font-style:{{ w.fs }};font-weight:{{ w.fw }};letter-spacing:{{ w.ls }};color:{{ w.c }}">{{ w.text }}</span></span></sc-for></h1>
+      <p style="margin:0;max-width:560px;font-size:clamp(18px,1.6vw,22px);line-height:1.45;color:var(--fg2);text-wrap:pretty">I architect intelligent systems and turn raw numbers into your most unfair business advantage.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:12px">
+        <a href="#contact" onClick="{{ openDrawer }}" style="display:flex;align-items:center;gap:10px;padding:16px 24px;background:var(--acc);color:var(--onacc);border-radius:999px;font-weight:600;font-size:16px" style-hover="background:var(--fg);color:var(--bg)"><dc-import name="RollText" text="Book a discovery call" hint-size="160px,20px"></dc-import><span>→</span></a>
+        <a href="#work" style="display:flex;align-items:center;padding:16px 24px;border:1px solid var(--line);border-radius:999px;font-weight:500;font-size:16px" style-hover="border-color:var(--fg);color:var(--fg)"><dc-import name="RollText" text="See the work" hint-size="96px,20px"></dc-import></a>
+      </div>
+    </div>
+    <div style="position:relative;aspect-ratio:4/5;flex:1 1 280px;max-width:420px;margin-left:auto;border-radius:16px;overflow:hidden;background:#0b0b0b">
+      <img src="./assets/erick-neo.png" alt="Portrait of Erick Neo" style="width:100%;height:100%;object-fit:cover;display:block">
+      <span style="position:absolute;left:12px;bottom:12px;padding:6px 10px;background:rgba(18,17,15,.8);color:#ece8e1;border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:12px;display:flex;align-items:center;gap:8px"><span style="width:7px;height:7px;border-radius:50%;background:#5fbf73"></span>Taking new clients</span>
+    </div>
+  </div>
+  <div style="position:relative;height:clamp(200px,28vh,300px);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <canvas ref="{{ canvasRef }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;pointer-events:none"></canvas>
+    <span style="position:absolute;top:12px;left:0;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);letter-spacing:0.05em;pointer-events:none">FIG. 01 — ACTUAL VS. FORECAST · SCRUB WITH YOUR CURSOR</span>
+  </div>
+</header>
+</sc-if>
+
+<sc-if value="{{ isC }}" hint-placeholder-val="{{ false }}">
+<header id="top" style="position:relative;min-height:calc(100vh - 62px);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;gap:clamp(22px,3vw,34px);padding:clamp(72px,12vh,140px) clamp(20px,4vw,56px) 0;overflow:hidden;border-bottom:1px solid var(--line)">
+  <canvas ref="{{ canvasRef }}" style="position:absolute;left:0;right:0;bottom:0;width:100%;height:48%;display:block;pointer-events:none"></canvas>
+  <span style="position:relative;display:flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--fg)"><span style="width:7px;height:7px;border-radius:50%;background:#5fbf73"></span>Erick Neo · AI Engineer · Taking new clients</span>
+  <h1 style="position:relative;margin:0;max-width:1300px;font-weight:600;font-size:clamp(52px,9.6vw,168px);line-height:0.9;letter-spacing:-0.045em;text-wrap:balance"><sc-for list="{{ headWords }}" as="w" hint-placeholder-count="5"><span style="display:inline-block;overflow:hidden;vertical-align:top;padding:0 0.04em 0.12em 0;margin:0 0.18em -0.12em 0"><span style="display:inline-block;transition:transform 1.2s cubic-bezier(.16,1,.3,1);transition-delay:{{ w.d }};transform:{{ w.t }};font-family:{{ w.ff }};font-style:{{ w.fs }};font-weight:{{ w.fw }};letter-spacing:{{ w.ls }};color:{{ w.c }}">{{ w.text }}</span></span></sc-for></h1>
+  <p style="position:relative;margin:0;max-width:560px;font-size:clamp(18px,1.6vw,22px);line-height:1.45;color:var(--fg2);text-wrap:pretty">I architect intelligent systems and turn raw numbers into your most unfair business advantage.</p>
+  <div style="position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:12px">
+    <a href="#contact" onClick="{{ openDrawer }}" style="display:flex;align-items:center;gap:10px;padding:16px 24px;background:var(--acc);color:var(--onacc);border-radius:999px;font-weight:600;font-size:16px" style-hover="background:var(--fg);color:var(--bg)"><dc-import name="RollText" text="Book a discovery call" hint-size="160px,20px"></dc-import><span>→</span></a>
+    <a href="#work" style="display:flex;align-items:center;padding:16px 24px;background:var(--bg);border:1px solid var(--line);border-radius:999px;font-weight:500;font-size:16px" style-hover="border-color:var(--fg);color:var(--fg)"><dc-import name="RollText" text="See the work" hint-size="96px,20px"></dc-import></a>
+  </div>
+</header>
+</sc-if>
+
+<section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));border-bottom:1px solid var(--line)">
+  <sc-for list="{{ proof }}" as="p" hint-placeholder-count="3">
+    <div data-reveal="" style="display:flex;flex-direction:column;gap:8px;padding:clamp(28px,3.5vw,44px) clamp(20px,4vw,56px);border-right:1px solid var(--line)">
+      <span style="font-weight:600;font-size:clamp(36px,4vw,56px);letter-spacing:-0.04em;line-height:1">{{ p.v }}</span>
+      <span style="font-size:16px;line-height:1.4;color:var(--fg2);max-width:280px">{{ p.k }}</span>
+    </div>
+  </sc-for>
+</section>
+
+<section id="services" style="padding:clamp(72px,10vw,140px) clamp(20px,4vw,56px);border-bottom:1px solid var(--line)">
+  <div style="display:flex;flex-wrap:wrap;gap:24px 48px;margin-bottom:clamp(40px,6vw,80px)">
+    <span style="flex:1 1 240px;font-family:'IBM Plex Mono',monospace;font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">01 — Services</span>
+    <h2 data-reveal="" style="flex:2 1 520px;margin:0;font-weight:600;font-size:clamp(36px,5vw,72px);line-height:1;letter-spacing:-0.035em;text-wrap:balance">Tailored to your data, <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400">never off the rack.</span></h2>
+  </div>
+  <div style="display:flex;flex-direction:column;border-top:1px solid var(--line)">
+    <sc-for list="{{ services }}" as="s" hint-placeholder-count="3">
+      <div data-reveal="" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px 48px;padding:clamp(28px,4vw,48px) 0;border-bottom:1px solid var(--line)">
+        <div style="display:flex;gap:20px;align-items:baseline">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--acc)">{{ s.n }}</span>
+          <h3 style="margin:0;font-weight:600;font-size:clamp(26px,3vw,40px);letter-spacing:-0.03em;line-height:1.05">{{ s.title }}</h3>
+        </div>
+        <p style="margin:0;font-size:18px;line-height:1.5;color:var(--fg2);max-width:460px;text-wrap:pretty">{{ s.body }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start">
+          <sc-for list="{{ s.tags }}" as="t" hint-placeholder-count="3">
+            <span style="padding:6px 12px;border:1px solid var(--line);border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--fg2)">{{ t }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="play" ref="{{ playRef }}" style="position:relative;height:clamp(440px,64vh,640px);overflow:hidden;border-bottom:1px solid var(--line)">
+  <div style="position:absolute;top:clamp(24px,4vw,44px);left:clamp(20px,4vw,56px);right:clamp(20px,4vw,56px);display:flex;justify-content:space-between;gap:16px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);letter-spacing:0.05em;pointer-events:none">
+    <span>FIG. 02 — OUTLIERS, HANDLED</span>
+    <span>Drag &amp; throw ↗</span>
+  </div>
+  <p style="position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);width:min(900px,calc(100% - 48px));margin:0;text-align:center;font-weight:600;font-size:clamp(28px,4vw,56px);line-height:1.05;letter-spacing:-0.035em;text-wrap:balance;pointer-events:none">When every dashboard looks the same, <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:var(--acc)">details</span> make the difference.</p>
+    <div data-body="" style="position:absolute;left:0;top:0;width:clamp(96px,13vw,180px);height:clamp(96px,13vw,180px);border-radius:50%;background:var(--acc);color:var(--onacc);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:calc(clamp(96px,13vw,180px) * 0.56);letter-spacing:-0.04em;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;translate:0 -600px">N</div>
+    <div data-body="" style="position:absolute;left:0;top:0;width:clamp(96px,13vw,180px);height:clamp(96px,13vw,180px);border-radius:22%;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:calc(clamp(96px,13vw,180px) * 0.56);letter-spacing:-0.04em;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;translate:0 -600px">E</div>
+    <div data-body="" style="position:absolute;left:0;top:0;width:clamp(96px,13vw,180px);height:clamp(96px,13vw,180px);border-radius:50%;background:transparent;color:var(--fg);border:2px solid var(--fg);box-sizing:border-box;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:calc(clamp(96px,13vw,180px) * 0.56);letter-spacing:-0.04em;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;translate:0 -600px">O</div>
+    <div data-body="" style="position:absolute;left:0;top:0;width:clamp(96px,13vw,180px);height:clamp(96px,13vw,180px);border-radius:22%;background:var(--bg2);color:var(--fg);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:calc(clamp(96px,13vw,180px) * 0.56);letter-spacing:-0.04em;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;translate:0 -600px">A</div>
+    <div data-body="" style="position:absolute;left:0;top:0;width:clamp(96px,13vw,180px);height:clamp(96px,13vw,180px);border-radius:50%;background:var(--fg);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:calc(clamp(96px,13vw,180px) * 0.56);letter-spacing:-0.04em;cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none;translate:0 -600px">I</div>
+</section>
+
+<section id="work" style="padding:clamp(72px,10vw,140px) clamp(20px,4vw,56px);border-bottom:1px solid var(--line)">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:28px;margin-bottom:clamp(40px,6vw,72px)">
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">02 — Selected work</span>
+      <h2 data-reveal="" style="margin:0;font-weight:600;font-size:clamp(48px,8vw,128px);line-height:0.9;letter-spacing:-0.045em">Work</h2>
+    </div>
+    <div style="display:flex;gap:6px;padding:5px;border:1px solid var(--line);border-radius:999px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="2">
+        <button onClick="{{ t.select }}" style="all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;font-size:15px;font-weight:500;background:{{ t.bg }};color:{{ t.fg }}">{{ t.label }}<span style="font-family:'IBM Plex Mono',monospace;font-size:12px;opacity:.7">{{ t.count }}</span></button>
+      </sc-for>
+    </div>
+  </div>
+  <p style="margin:0 0 clamp(32px,4vw,48px);max-width:620px;font-size:18px;line-height:1.5;color:var(--fg2);text-wrap:pretty">{{ trackIntro }}</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(40px,5vw,72px) clamp(24px,3vw,40px)">
+    <sc-for list="{{ projects }}" as="p" hint-placeholder-count="4">
+      <article data-reveal="" style="display:flex;flex-direction:column;gap:18px">
+        <div data-cursor="view" style="position:relative;aspect-ratio:16/10;border-radius:14px;overflow:hidden;background:var(--bg2);border:1px solid var(--line)">
+          <image-slot id="{{ p.slot }}" shape="rect" placeholder="Drop a screenshot of {{ p.title }}"></image-slot>
+          <span style="position:absolute;top:14px;left:14px;padding:5px 10px;background:rgba(18,17,15,0.84);border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:#ece8e1;pointer-events:none">{{ p.n }} · {{ p.kind }}</span>
+        </div>
+        <a href="{{ p.href }}" target="_blank" rel="noopener" style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;color:var(--fg)" style-hover="color:var(--acc)">
+          <h3 style="margin:0;font-weight:600;font-size:clamp(24px,2.4vw,32px);letter-spacing:-0.025em">{{ p.title }}</h3>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;white-space:nowrap">Case study ↗</span>
+        </a>
+        <p style="margin:-6px 0 0;font-size:17px;line-height:1.5;color:var(--fg2);max-width:560px;text-wrap:pretty">{{ p.body }}</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px 16px">
+          <sc-for list="{{ p.stack }}" as="t" hint-placeholder-count="3">
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);padding:4px 0;border-bottom:1px solid var(--line)">{{ t }}</span>
+          </sc-for>
+        </div>
+      </article>
+    </sc-for>
+  </div>
+  <div style="display:flex;justify-content:center;margin-top:clamp(48px,6vw,80px)">
+    <a href="{{ moreHref }}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;padding:16px 26px;border:1px solid var(--line);border-radius:999px;font-weight:500;font-size:16px" style-hover="border-color:var(--fg);color:var(--fg)">{{ moreLabel }} <span>↗</span></a>
+  </div>
+</section>
+
+<section id="stack" style="padding:clamp(72px,10vw,140px) clamp(20px,4vw,56px);border-bottom:1px solid var(--line)">
+  <div style="display:flex;flex-wrap:wrap;gap:24px 48px;margin-bottom:clamp(40px,6vw,72px)">
+    <span style="flex:1 1 240px;font-family:'IBM Plex Mono',monospace;font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">03 — Skills &amp; stack</span>
+    <h2 data-reveal="" style="flex:2 1 520px;margin:0;font-weight:600;font-size:clamp(36px,5vw,72px);line-height:1;letter-spacing:-0.035em;text-wrap:balance">The tools I cut and stitch with.</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(32px,4vw,56px)">
+    <sc-for list="{{ stackGroups }}" as="g" hint-placeholder-count="3">
+      <div data-reveal="" style="display:flex;flex-direction:column;gap:20px;padding-top:20px;border-top:1px solid var(--fg)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px">
+          <h3 style="margin:0;font-weight:600;font-size:24px;letter-spacing:-0.02em">{{ g.title }}</h3>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut)">{{ g.count }}</span>
+        </div>
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column">
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="5">
+            <li style="display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:17px">
+              <span>{{ it.name }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut)">{{ it.note }}</span>
+            </li>
+          </sc-for>
+        </ul>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section id="experience" style="padding:clamp(72px,10vw,140px) clamp(20px,4vw,56px);border-bottom:1px solid var(--line)">
+  <div style="display:flex;flex-wrap:wrap;gap:clamp(40px,6vw,96px);align-items:flex-start">
+    <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:28px">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">04 — Experience</span>
+      <h2 data-reveal="" style="margin:0;font-weight:600;font-size:clamp(36px,5vw,72px);line-height:1;letter-spacing:-0.035em">Seven years <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400">in the data.</span></h2>
+      <sc-if value="{{ showPortraitHere }}" hint-placeholder-val="{{ true }}">
+        <div style="aspect-ratio:4/5;max-width:340px;border-radius:14px;overflow:hidden;background:#0b0b0b">
+          <img src="./assets/erick-neo.png" alt="Portrait of Erick Neo" style="width:100%;height:100%;object-fit:cover;display:block">
+        </div>
+      </sc-if>
+    </div>
+    <div style="flex:2 1 440px;min-width:0;display:flex;flex-direction:column">
+      <sc-for list="{{ timeline }}" as="e" hint-placeholder-count="3">
+        <div data-reveal="" style="display:grid;grid-template-columns:minmax(110px,160px) minmax(0,1fr);gap:16px 32px;padding:32px 0;border-top:1px solid var(--line)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--mut);padding-top:6px">{{ e.years }}</span>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px">
+              <h3 style="margin:0;font-weight:600;font-size:clamp(22px,2.2vw,30px);letter-spacing:-0.02em">{{ e.role }}</h3>
+              <span style="font-size:17px;color:var(--acc)">{{ e.org }}</span>
+            </div>
+            <p style="margin:0;font-size:17px;line-height:1.55;color:var(--fg2);max-width:620px;text-wrap:pretty">{{ e.body }}</p>
+          </div>
+        </div>
+      </sc-for>
+      <div style="display:flex;flex-direction:column;gap:16px;padding:32px 0 0;border-top:1px solid var(--line)">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">Certifications</span>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ certs }}" as="c" hint-placeholder-count="5">
+            <span style="display:flex;gap:10px;padding:9px 14px;background:var(--bg2);border-radius:999px;font-size:15px"><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);padding-top:2px">{{ c.y }}</span>{{ c.name }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact" style="padding:clamp(80px,12vw,160px) clamp(20px,4vw,56px) 32px;display:flex;flex-direction:column;gap:clamp(56px,8vw,112px)">
+  <div style="display:flex;flex-direction:column;gap:32px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">05 — Contact</span>
+    <h2 data-reveal="" style="margin:0;font-weight:600;font-size:clamp(56px,10.5vw,180px);line-height:0.88;letter-spacing:-0.045em;text-wrap:balance">Let's tailor your <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400;color:var(--acc)">advantage.</span></h2>
+    <p style="margin:0;max-width:560px;font-size:19px;line-height:1.5;color:var(--fg2);text-wrap:pretty">Tell me about the decision you're trying to make or the workflow you want automated. I'll come back with how I'd approach it.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+      <a href="mailto:erick@rafikicode.com" style="display:flex;align-items:center;gap:12px;padding:20px 30px;background:var(--fg);color:var(--bg);border-radius:999px;font-weight:600;font-size:clamp(18px,1.8vw,22px)" style-hover="background:var(--acc);color:var(--onacc)">erick@rafikicode.com <span>→</span></a>
+      <span style="font-size:16px;color:var(--mut);padding:0 12px">Kenya/Nairobi · {{ clock }} · working with clients worldwide</span>
+    </div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:20px;padding-top:28px;border-top:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--mut)">
+    <span>© 2026 Erick Neo</span>
+    <div style="display:flex;flex-wrap:wrap;gap:24px">
+      <a href="https://www.linkedin.com/in/erick-nyamwaya-atura-874815211/" target="_blank" rel="noopener" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="LinkedIn ↗" hint-size="80px,16px"></dc-import></a>
+      <a href="https://github.com/eriqneo" target="_blank" rel="noopener" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="GitHub ↗" hint-size="80px,16px"></dc-import></a>
+      <a href="https://www.datascienceportfol.io/neo" target="_blank" rel="noopener" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="Data portfolio ↗" hint-size="80px,16px"></dc-import></a>
+      <a href="https://www.rafikicode.com/work" target="_blank" rel="noopener" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="Code Rafiki ↗" hint-size="80px,16px"></dc-import></a>
+    </div>
+    <a href="#top" style="color:var(--mut)" style-hover="color:var(--fg)"><dc-import name="RollText" text="Back to top ↑" hint-size="80px,16px"></dc-import></a>
+  </div>
+</footer>
+
+<div ref="{{ cursorRef }}" aria-hidden="true" style="position:fixed;left:0;top:0;z-index:55;width:92px;height:92px;margin:-46px 0 0 -46px;border-radius:50%;background:var(--acc);color:var(--onacc);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.04em;pointer-events:none;opacity:0;scale:0;transition:scale .45s cubic-bezier(.16,1,.3,1),opacity .3s ease">VIEW ↗</div>
+
+<sc-if value="{{ drawerReady }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;z-index:60;background:rgba(8,8,7,0.55);opacity:{{ dOp }};pointer-events:{{ dPE }};transition:opacity .6s ease"></div>
+<aside aria-label="Work with Erick" style="position:fixed;top:12px;right:12px;bottom:12px;width:min(580px,calc(100% - 24px));z-index:61;display:flex;flex-direction:column;gap:40px;padding:clamp(24px,3vw,36px);box-sizing:border-box;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:18px;overflow-y:auto;transform:{{ dT }};transition:transform .9s cubic-bezier(.16,1,.3,1)">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:16px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">Work with me</span>
+    <button onClick="{{ closeDrawer }}" style="all:unset;cursor:pointer;padding:9px 16px;border:1px solid var(--line);border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;text-transform:uppercase;letter-spacing:0.06em;color:var(--fg)" style-hover="border-color:var(--fg)"><dc-import name="RollText" text="Close" hint-size="44px,16px"></dc-import></button>
+  </div>
+  <h2 style="margin:0;font-weight:600;font-size:clamp(30px,3.4vw,44px);line-height:1.02;letter-spacing:-0.03em;text-wrap:balance">Engagements, contact details and <span style="font-family:'Newsreader',serif;font-style:italic;font-weight:400">answers.</span></h2>
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">Engagements</span>
+    <sc-for list="{{ engagements }}" as="g" hint-placeholder-count="3">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;padding:18px 20px;background:var(--bg2);border-radius:14px">
+        <h3 style="margin:0;font-size:20px;font-weight:600;letter-spacing:-0.01em">{{ g.t }}</h3>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut);padding-top:5px">{{ g.time }}</span>
+        <p style="grid-column:1 / -1;margin:0;font-size:16px;line-height:1.45;color:var(--fg2)">{{ g.d }}</p>
+      </div>
+    </sc-for>
+    <span style="font-size:15px;color:var(--mut)">Each engagement is quoted to scope after a first conversation.</span>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:14px">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut)">Contact</span>
+    <button onClick="{{ copyEmail }}" style="all:unset;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px;border:1px solid var(--line);border-radius:14px;color:var(--fg)" style-hover="border-color:var(--acc)">
+      <span style="font-size:clamp(19px,2vw,24px);font-weight:600;letter-spacing:-0.01em">erick@rafikicode.com</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--acc);white-space:nowrap">{{ copyLabel }}</span>
+    </button>
+    <div style="display:flex;flex-wrap:wrap;gap:8px 20px;font-size:16px">
+      <a href="https://www.linkedin.com/in/erick-nyamwaya-atura-874815211/" target="_blank" rel="noopener"><dc-import name="RollText" text="LinkedIn ↗" hint-size="80px,18px"></dc-import></a>
+      <a href="https://github.com/eriqneo" target="_blank" rel="noopener"><dc-import name="RollText" text="GitHub ↗" hint-size="70px,18px"></dc-import></a>
+      <a href="https://www.datascienceportfol.io/neo" target="_blank" rel="noopener"><dc-import name="RollText" text="Data portfolio ↗" hint-size="120px,18px"></dc-import></a>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding-top:14px;border-top:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--mut)"><span>Kenya/Nairobi</span><span style="color:var(--fg)">{{ clock }}</span></div>
+  </div>
+  <div style="display:flex;flex-direction:column">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:var(--mut);padding-bottom:6px">Answers</span>
+    <sc-for list="{{ answers }}" as="q" hint-placeholder-count="4">
+      <div style="border-bottom:1px solid var(--line)">
+        <button onClick="{{ q.toggle }}" style="all:unset;box-sizing:border-box;cursor:pointer;width:100%;display:flex;gap:16px;align-items:center;padding:18px 0;color:var(--fg)" style-hover="color:var(--acc)">
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--mut)">{{ q.n }}</span>
+          <span style="flex:1;font-size:18px;font-weight:500">{{ q.q }}</span>
+          <span style="flex:none;font-size:20px;transition:transform .35s ease;transform:{{ q.rot }}">+</span>
+        </button>
+        <sc-if value="{{ q.open }}" hint-placeholder-val="{{ false }}">
+          <p style="margin:0;padding:0 32px 20px 36px;font-size:16px;line-height:1.5;color:var(--fg2)">{{ q.a }}</p>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+</aside>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroVariant&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;A · Clusters&quot;,&quot;B · Forecast&quot;,&quot;C · Pulse&quot;],&quot;default&quot;:&quot;A · Clusters&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;defaultTheme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;}}">
+const PAL = {
+  dark: { dot: 'rgba(236,232,225,0.42)', faint: 'rgba(236,232,225,0.16)', grid: 'rgba(236,232,225,0.08)', fg: '#ece8e1', acc: '#c24d64', accA: a => 'rgba(194,77,100,' + a + ')', onacc: '#ffffff' },
+  light: { dot: 'rgba(23,21,18,0.42)', faint: 'rgba(23,21,18,0.16)', grid: 'rgba(23,21,18,0.08)', fg: '#171512', acc: '#7d1d32', accA: a => 'rgba(125,29,50,' + a + ')', onacc: '#ffffff' },
+};
+
+class Component extends DCLogic {
+  state = { theme: null, track: 'ai', loaded: false, ready: false, drawer: false, copied: false, faq: 0, now: '' };
+  canvasRef = React.createRef(); rootRef = React.createRef(); cursorRef = React.createRef(); playRef = React.createRef();
+
+  variant() { const v = this.props.heroVariant ?? 'A · Clusters'; return v[0]; }
+  componentDidMount() { this.sync(); this.setupMotion(); this.setupSmooth(); this.setupPlay(); }
+  setupSmooth() {
+    if (this.reduceM || !matchMedia('(pointer: fine)').matches) return;
+    document.documentElement.style.scrollBehavior = 'auto';
+    let cur = scrollY, tgt = scrollY, running = false;
+    const max = () => document.documentElement.scrollHeight - innerHeight;
+    const step = () => { cur += (tgt - cur) * 0.1; if (Math.abs(tgt - cur) < 0.5) { cur = tgt; running = false; scrollTo(0, cur); return; } scrollTo(0, cur); this.sraf = requestAnimationFrame(step); };
+    const go = () => { if (!running) { running = true; this.sraf = requestAnimationFrame(step); } };
+    this.wh = e => {
+      if (e.ctrlKey || this.state.drawer || (e.target.closest && e.target.closest('aside'))) return;
+      e.preventDefault(); if (!running) cur = tgt = scrollY;
+      tgt = Math.max(0, Math.min(max(), tgt + e.deltaY * (e.deltaMode === 1 ? 32 : 1))); go();
+    };
+    this.sc = () => { if (!running) cur = tgt = scrollY; };
+    this.ac = e => {
+      const a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a || e.defaultPrevented) return;
+      const el = document.getElementById(a.getAttribute('href').slice(1)); if (!el) return;
+      e.preventDefault(); if (!running) cur = scrollY;
+      tgt = Math.max(0, Math.min(max(), el.getBoundingClientRect().top + scrollY - 70)); go();
+    };
+    window.addEventListener('wheel', this.wh, { passive: false });
+    window.addEventListener('scroll', this.sc, { passive: true });
+    document.addEventListener('click', this.ac);
+  }
+  setupPlay() {
+    const box = this.playRef.current; if (!box) return;
+    const els = [...box.querySelectorAll('[data-body]')];
+    const W = () => box.clientWidth, H = () => box.clientHeight;
+    const B = this.bodies = els.map((el, i) => { const r = el.offsetWidth / 2; return { el, r, x: W() * (0.18 + 0.16 * i), y: -r * 2 - i * 140, vx: (Math.random() - 0.5) * 6, vy: 0, rot: (Math.random() - 0.5), drag: null }; });
+    let live = this.reduceM;
+    this.pio = new IntersectionObserver(es => { if (es[0].isIntersecting) live = true; }, { threshold: 0.35 });
+    this.pio.observe(box);
+    this.playL = [];
+    B.forEach(b => {
+      const local = e => { const r = box.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+      const down = e => { e.preventDefault(); live = true; b.el.setPointerCapture(e.pointerId); const [px, py] = local(e); b.drag = { ox: px - b.x, oy: py - b.y, lx: px, ly: py }; b.el.style.cursor = 'grabbing'; b.el.style.zIndex = '2'; };
+      const move = e => { if (!b.drag) return; const [px, py] = local(e); b.vx = (px - b.drag.lx) * 0.9; b.vy = (py - b.drag.ly) * 0.9; b.drag.lx = px; b.drag.ly = py; b.x = px - b.drag.ox; b.y = py - b.drag.oy; };
+      const up = () => { if (!b.drag) return; b.drag = null; b.el.style.cursor = 'grab'; b.el.style.zIndex = ''; };
+      b.el.addEventListener('pointerdown', down); b.el.addEventListener('pointermove', move);
+      b.el.addEventListener('pointerup', up); b.el.addEventListener('pointercancel', up);
+      this.playL.push([b.el, down, move, up]);
+    });
+    const loop = () => {
+      const w = W(), h = H();
+      if (live) {
+        for (const b of B) {
+          b.r = b.el.offsetWidth / 2;
+          if (!b.drag) { b.vy += 0.7; b.vx *= 0.995; b.x += b.vx; b.y += b.vy; }
+          if (b.y + b.r > h) { b.y = h - b.r; b.vy *= -0.42; b.vx *= 0.9; if (Math.abs(b.vy) < 1) b.vy = 0; }
+          if (b.x - b.r < 0) { b.x = b.r; b.vx = Math.abs(b.vx) * 0.6; }
+          if (b.x + b.r > w) { b.x = w - b.r; b.vx = -Math.abs(b.vx) * 0.6; }
+          b.rot += b.vx / b.r;
+        }
+        for (let i = 0; i < B.length; i++) for (let j = i + 1; j < B.length; j++) {
+          const a = B[i], c = B[j], dx = c.x - a.x, dy = c.y - a.y, d = Math.hypot(dx, dy) || 0.01, m = a.r + c.r;
+          if (d < m) {
+            const nx = dx / d, ny = dy / d, o = m - d;
+            const wa = a.drag ? 0 : c.drag ? 1 : 0.5, wc = c.drag ? 0 : a.drag ? 1 : 0.5;
+            a.x -= nx * o * wa; a.y -= ny * o * wa; c.x += nx * o * wc; c.y += ny * o * wc;
+            const rv = (c.vx - a.vx) * nx + (c.vy - a.vy) * ny;
+            if (rv < 0) { const imp = -1.5 * rv / 2; if (!a.drag) { a.vx -= imp * nx; a.vy -= imp * ny; } if (!c.drag) { c.vx += imp * nx; c.vy += imp * ny; } }
+          }
+        }
+      }
+      for (const b of B) { b.el.style.translate = (b.x - b.r) + 'px ' + (b.y - b.r) + 'px'; b.el.style.rotate = b.rot + 'rad'; }
+      this.praf = requestAnimationFrame(loop);
+    };
+    this.praf = requestAnimationFrame(loop);
+  }
+  componentDidUpdate() { this.sync(); this.scanReveal(); }
+  componentWillUnmount() { this.teardown(); this.teardownMotion(); }
+  setupMotion() {
+    this.reduceM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.lt = setTimeout(() => this.setState({ loaded: true, ready: true }), 150);
+    const fmt = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'Africa/Nairobi' });
+    const tick = () => this.setState({ now: fmt.format(new Date()) });
+    tick(); this.ci = setInterval(tick, 20000);
+    this.kd = e => { if (e.key === 'Escape' && this.state.drawer) this.close(); };
+    window.addEventListener('keydown', this.kd);
+    this.seen = new WeakSet(); this.anims = new WeakMap();
+    this.io = new IntersectionObserver(es => {
+      es.filter(e => e.isIntersecting).forEach((e, i) => { const a = this.anims.get(e.target); if (a) { a.effect.updateTiming({ delay: i * 90 }); a.play(); } this.io.unobserve(e.target); });
+    }, { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+    this.scanReveal();
+    const cur = this.cursorRef.current;
+    if (cur && matchMedia('(pointer: fine)').matches) {
+      let x = innerWidth / 2, y = innerHeight / 2, tx = x, ty = y, on = false;
+      this.cm = e => { tx = e.clientX; ty = e.clientY; const hit = e.target && e.target.closest && e.target.closest('[data-cursor]'); if (!!hit !== on) { on = !!hit; cur.style.scale = on ? '1' : '0'; cur.style.opacity = on ? '1' : '0'; } };
+      window.addEventListener('pointermove', this.cm, { passive: true });
+      const loop = () => { x += (tx - x) * 0.2; y += (ty - y) * 0.2; cur.style.translate = x + 'px ' + y + 'px'; this.craf = requestAnimationFrame(loop); };
+      this.craf = requestAnimationFrame(loop);
+    }
+  }
+  scanReveal() {
+    const root = this.rootRef.current; if (!root || !this.io) return;
+    root.querySelectorAll('[data-reveal]').forEach(el => {
+      if (this.seen.has(el)) return; this.seen.add(el);
+      if (this.reduceM || !el.animate) return;
+      const a = el.animate([{ opacity: 0, transform: 'translateY(56px)' }, { opacity: 1, transform: 'none' }], { duration: 1100, easing: 'cubic-bezier(.16,1,.3,1)', fill: 'both' });
+      a.pause(); this.anims.set(el, a); this.io.observe(el);
+    });
+  }
+  teardownMotion() {
+    cancelAnimationFrame(this.sraf); cancelAnimationFrame(this.praf); this.pio && this.pio.disconnect();
+    this.wh && window.removeEventListener('wheel', this.wh); this.sc && window.removeEventListener('scroll', this.sc); this.ac && document.removeEventListener('click', this.ac);
+    (this.playL || []).forEach(([el, d, m, u]) => { el.removeEventListener('pointerdown', d); el.removeEventListener('pointermove', m); el.removeEventListener('pointerup', u); el.removeEventListener('pointercancel', u); });
+    clearTimeout(this.lt); clearInterval(this.ci); clearTimeout(this.cpt); this.io && this.io.disconnect(); cancelAnimationFrame(this.craf); this.cm && window.removeEventListener('pointermove', this.cm); this.kd && window.removeEventListener('keydown', this.kd); document.body.style.overflow = ''; }
+  close() { document.body.style.overflow = ''; this.setState({ drawer: false }); }
+
+  sync() {
+    const c = this.canvasRef.current, v = this.variant();
+    if (c !== this.c || v !== this.mode) { this.teardown(); this.mode = v; if (c) this.init(c); }
+  }
+  teardown() {
+    cancelAnimationFrame(this.raf);
+    this.ro && this.ro.disconnect();
+    this.onMove && window.removeEventListener('pointermove', this.onMove);
+    this.c = null; this.ctx = null;
+  }
+  init(c) {
+    this.c = c; this.ctx = c.getContext('2d');
+    this.mouse = { x: -9999, y: -9999 };
+    this.t0 = performance.now();
+    this.reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.onMove = e => { const r = c.getBoundingClientRect(); this.mouse = { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    window.addEventListener('pointermove', this.onMove, { passive: true });
+    this.ro = new ResizeObserver(() => this.resize()); this.ro.observe(c);
+    this.resize();
+    const loop = t => { if (!this.ctx) return; this.draw(t); this.raf = requestAnimationFrame(loop); };
+    this.raf = requestAnimationFrame(loop);
+  }
+  resize() {
+    const c = this.c; if (!c) return;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    this.w = c.clientWidth; this.h = c.clientHeight;
+    c.width = this.w * dpr; c.height = this.h * dpr;
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    this.seed();
+  }
+  seed() {
+    const w = this.w, h = this.h;
+    if (this.mode === 'A') {
+      const defs = [
+        { x: 0.14, y: 0.26, l: 'claims recovery' }, { x: 0.38, y: 0.16, l: 'live sales stream' },
+        { x: 0.6, y: 0.3, l: 'churn risk' }, { x: 0.84, y: 0.2, l: 'sentiment · NLP' }, { x: 0.76, y: 0.5, l: 'demand forecast' },
+      ];
+      this.clusters = defs.map(d => ({ x: d.x * w, y: d.y * h, l: d.l, n: 0 }));
+      const spread = Math.min(w, h) * 0.085;
+      const g = () => { let u = 0; for (let i = 0; i < 3; i++) u += Math.random(); return (u - 1.5) / 1.5; };
+      this.pts = [];
+      for (let i = 0; i < 520; i++) {
+        const noise = Math.random() < 0.12, k = Math.floor(Math.random() * 5), cl = this.clusters[k];
+        const hx = noise ? Math.random() * w : cl.x + g() * spread * 1.6;
+        const hy = noise ? Math.random() * h * 0.7 : cl.y + g() * spread;
+        if (!noise) cl.n++;
+        this.pts.push({ hx, hy, x: hx, y: hy, vx: 0, vy: 0, k: noise ? -1 : k, ph: Math.random() * 6.28, r: 1 + Math.random() * 1.2 });
+      }
+    } else if (this.mode === 'B') {
+      const n = 140; let v = 50; this.series = [];
+      for (let i = 0; i < n; i++) { v += (Math.random() - 0.4) * 3 + Math.sin(i / 8) * 0.9; this.series.push(v); }
+      const mn = Math.min(...this.series), mx = Math.max(...this.series);
+      this.ys = this.series.map(s => h * 0.82 - (s - mn) / (mx - mn) * h * 0.6);
+      this.split = Math.floor(n * 0.76); this.cx = null;
+    } else {
+      const N = Math.max(24, Math.min(80, Math.floor(w / 20)));
+      this.bars = Array.from({ length: N }, (_, i) => {
+        const b = 0.22 + 0.18 * Math.sin(i * 0.35) + 0.12 * Math.sin(i * 0.9 + 1) + Math.random() * 0.12;
+        return { b, cur: 0, v: Math.round(b * 1000) };
+      });
+    }
+  }
+  pal() { return PAL[this.theme()] }
+  inside() { const m = this.mouse; return m.x >= 0 && m.x <= this.w && m.y >= -60 && m.y <= this.h + 60; }
+
+  draw(t) {
+    const ctx = this.ctx; if (!ctx) return;
+    ctx.clearRect(0, 0, this.w, this.h);
+    if (this.mode === 'A') this.drawA(t); else if (this.mode === 'B') this.drawB(t); else this.drawC(t);
+  }
+  label(x, y, text, P) {
+    const ctx = this.ctx;
+    ctx.font = '500 12px "IBM Plex Mono", monospace';
+    const tw = ctx.measureText(text).width;
+    const bx = Math.min(Math.max(x, 2), this.w - tw - 20);
+    ctx.fillStyle = P.acc; ctx.fillRect(bx, y - 22, tw + 18, 24);
+    ctx.fillStyle = P.onacc; ctx.fillText(text, bx + 9, y - 6);
+  }
+  drawA(t) {
+    const ctx = this.ctx, w = this.w, h = this.h, m = this.mouse, P = this.pal();
+    const time = this.reduce ? 0 : t * 0.0006;
+    let near = null, nd = 170;
+    for (const cl of this.clusters) { const d = Math.hypot(cl.x - m.x, cl.y - m.y); if (d < nd) { nd = d; near = cl; } }
+    const ni = near ? this.clusters.indexOf(near) : -2, links = [];
+    for (const p of this.pts) {
+      const tx = p.hx + Math.sin(time + p.ph) * 4, ty = p.hy + Math.cos(time * 0.8 + p.ph) * 4;
+      const dx = m.x - p.x, dy = m.y - p.y, d = Math.hypot(dx, dy);
+      if (d < 140 && d > 0.1) { const f = (1 - d / 140) * 0.9; p.vx += dx / d * f; p.vy += dy / d * f; }
+      p.vx += (tx - p.x) * 0.03; p.vy += (ty - p.y) * 0.03; p.vx *= 0.84; p.vy *= 0.84; p.x += p.vx; p.y += p.vy;
+      const hot = p.k === ni;
+      if (d < 110 && links.length < 18) links.push(p);
+      ctx.beginPath(); ctx.arc(p.x, p.y, hot ? p.r + 0.5 : p.r, 0, 6.283);
+      ctx.fillStyle = hot ? P.acc : p.k < 0 ? P.faint : P.dot; ctx.fill();
+    }
+    ctx.strokeStyle = P.accA(0.35); ctx.lineWidth = 1;
+    for (const p of links) { ctx.beginPath(); ctx.moveTo(m.x, m.y); ctx.lineTo(p.x, p.y); ctx.stroke(); }
+    if (near) {
+      const by = near.y - Math.min(w, h) * 0.12;
+      ctx.strokeStyle = P.accA(0.6); ctx.beginPath(); ctx.moveTo(near.x, near.y); ctx.lineTo(near.x, by); ctx.stroke();
+      this.label(near.x, by, near.l.toUpperCase() + '   n=' + near.n, P);
+    }
+  }
+  drawB(t) {
+    const ctx = this.ctx, w = this.w, h = this.h, P = this.pal(), ys = this.ys, n = ys.length, sp = this.split;
+    const prog = this.reduce ? 1 : Math.min(1, (t - this.t0) / 1600);
+    const ease = 1 - Math.pow(1 - prog, 3), lim = Math.max(2, Math.floor(ease * n));
+    const X = i => i / (n - 1) * w;
+    ctx.strokeStyle = P.grid; ctx.lineWidth = 1;
+    for (let g = 1; g < 4; g++) { const y = h * g / 4; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+    const aEnd = Math.min(lim, sp + 1);
+    ctx.beginPath(); ctx.moveTo(0, h);
+    for (let i = 0; i < aEnd; i++) ctx.lineTo(X(i), ys[i]);
+    ctx.lineTo(X(aEnd - 1), h); ctx.closePath(); ctx.fillStyle = P.accA(0.07); ctx.fill();
+    ctx.beginPath(); for (let i = 0; i < aEnd; i++) i ? ctx.lineTo(X(i), ys[i]) : ctx.moveTo(X(i), ys[i]);
+    ctx.strokeStyle = P.fg; ctx.lineWidth = 1.6; ctx.stroke();
+    if (lim > sp) {
+      ctx.beginPath();
+      for (let i = sp; i < lim; i++) ctx.lineTo(X(i), ys[i] - (i - sp) * 1.4);
+      for (let i = lim - 1; i >= sp; i--) ctx.lineTo(X(i), ys[i] + (i - sp) * 1.4);
+      ctx.closePath(); ctx.fillStyle = P.accA(0.14); ctx.fill();
+      ctx.beginPath(); ctx.setLineDash([5, 5]);
+      for (let i = sp; i < lim; i++) i === sp ? ctx.moveTo(X(i), ys[i]) : ctx.lineTo(X(i), ys[i]);
+      ctx.strokeStyle = P.acc; ctx.lineWidth = 1.6; ctx.stroke(); ctx.setLineDash([]);
+    }
+    const target = this.inside() ? this.mouse.x : X(sp);
+    this.cx = this.cx == null ? target : this.cx + (target - this.cx) * 0.18;
+    const idx = Math.max(0, Math.min(n - 1, Math.round(this.cx / w * (n - 1))));
+    if (idx < lim) {
+      const x = X(idx), y = ys[idx], fc = idx > sp;
+      ctx.strokeStyle = P.faint; ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      ctx.beginPath(); ctx.arc(x, y, 5, 0, 6.283); ctx.fillStyle = fc ? P.acc : P.fg; ctx.fill();
+      const val = this.series[idx].toFixed(1);
+      const txt = (fc ? 'FORECAST' : idx === sp ? 'TODAY' : 'ACTUAL') + ' · WK ' + (idx + 1) + ' · ' + val + (fc ? ' ±' + ((idx - sp) * 0.4).toFixed(1) : '');
+      this.label(x + 12, Math.max(30, y - 14), txt, P);
+    }
+  }
+  drawC(t) {
+    const ctx = this.ctx, w = this.w, h = this.h, P = this.pal(), B = this.bars, N = B.length;
+    const step = w / N, bw = step * 0.62;
+    const mx = this.inside() ? this.mouse.x : (this.reduce ? w * 0.5 : w * (0.5 + 0.38 * Math.sin(t * 0.00045)));
+    let hi = -1, hv = 0;
+    for (let i = 0; i < N; i++) {
+      const cx = i * step + step / 2, bump = Math.exp(-Math.pow((cx - mx) / 110, 2));
+      const b = B[i]; b.cur += (b.b + bump * 0.5 - b.cur) * 0.12;
+      const bh = b.cur * h * 0.95, x = cx - bw / 2, y = h - bh;
+      ctx.fillStyle = bump > 0.35 ? P.accA(0.35 + bump * 0.6) : P.faint;
+      ctx.fillRect(x, y, bw, bh);
+      if (bump > hv) { hv = bump; hi = i; }
+    }
+    if (hi >= 0 && hv > 0.6) {
+      const b = B[hi], cx = hi * step + step / 2, y = h - b.cur * h * 0.95;
+      this.label(cx - 20, y - 10, 'SIGNAL ' + String(hi + 1).padStart(2, '0') + ' · ' + Math.round(b.cur * 1000), P);
+    }
+  }
+  theme() { return this.state.theme ?? (this.props.defaultTheme ?? 'dark'); }
+
+  renderVals() {
+    const v = this.variant(), theme = this.theme(), track = this.state.track;
+    const ai = [
+      { n: '01', slot: 'w-faidapoint', kind: 'POS & finance', title: 'FaidaPoint', href: 'https://www.rafikicode.com/work/faidapoint', body: 'A profit-aware point-of-sale web app that keeps small-business sales and books in one operating view.', stack: ['Web app', 'POS', 'Product design'] },
+      { n: '02', slot: 'w-safarimaster', kind: 'Tour operations', title: 'SafariMaster', href: 'https://www.rafikicode.com/work/safarimaster', body: 'Travel management that automates the quotes, invoices, vouchers and reminders behind every journey.', stack: ['Web app', 'Operations', 'Automation'] },
+      { n: '03', slot: 'w-littleluxury', kind: 'Hospitality', title: 'Little Luxury', href: 'https://www.rafikicode.com/work/little-luxury', body: 'A reservation experience for a guest residence in Kitengela, from discovery to booking.', stack: ['Web design', 'Development', 'Booking journey'] },
+      { n: '04', slot: 'w-dkisaka', kind: 'Legal services', title: 'D.Kisaka & Associates', href: 'https://www.rafikicode.com/work/dkisaka-associates', body: 'A clear digital home that makes a complex legal practice easier to explore.', stack: ['Web design', 'Development', 'Content structure'] },
+    ];
+    const data = [
+      { n: '01', slot: 'w-livesales', kind: 'Real-time BI', title: 'Live Sales Performance Dashboard', href: 'https://www.datascienceportfol.io/neo/projects/19', body: 'A real-time dashboard simulating live e-commerce transactions, demand swings and conversion, modelled on the views revenue teams use daily.', stack: ['Python', 'Plotly', 'Streamlit', 'Pandas'] },
+      { n: '02', slot: 'w-medbilling', kind: 'Healthcare finance', title: 'Medical Billing Performance', href: 'https://www.datascienceportfol.io/neo/projects/14', body: 'Financial, operational and clinical KPIs in one view, tracking $297K billed against a 97% reimbursement rate.', stack: ['Looker Studio', 'SQL', 'Visualisation'] },
+      { n: '03', slot: 'w-churn', kind: 'Predictive model', title: 'Telecom Churn Prediction', href: 'https://www.datascienceportfol.io/neo/projects/13', body: 'Flags customers at risk of leaving using tenure, monthly charges and service usage.', stack: ['Python', 'Random Forest', 'Logistic Regression'] },
+      { n: '04', slot: 'w-sentiment', kind: 'NLP', title: 'iPhone 14 Launch Sentiment', href: 'https://www.datascienceportfol.io/neo/projects/16', body: '144,000 tweets analysed to read public perception in the two months before launch.', stack: ['NLTK', 'TextBlob', 'Seaborn', 'EDA'] },
+    ];
+    const tabDef = [{ id: 'ai', label: 'AI & products', count: ai.length }, { id: 'data', label: 'Data & analytics', count: data.length }];
+    const item = (name, note) => ({ name, note });
+    const groups = [
+      { title: 'AI engineering', items: [item('Python', 'core'), item('LLMs & RAG', 'assistants'), item('scikit-learn', 'ML'), item('XGBoost · LightGBM', 'boosting'), item('NLTK · TextBlob', 'NLP'), item('Workflow automation', 'ops')] },
+      { title: 'Data & BI', items: [item('SQL', 'daily'), item('BigQuery', 'warehouse'), item('Tableau', 'certified'), item('Looker Studio', 'certified'), item('Pandas · NumPy', 'wrangling'), item('Plotly · Streamlit', 'live apps')] },
+      { title: 'How I work', items: [item('Discovery & scoping', 'week 1'), item('Exploratory analysis', 'always'), item('Data storytelling', 'stakeholders'), item('Dashboards to real-time', 'delivery'), item('Mentoring teams', 'handover')] },
+    ].map(g => ({ ...g, count: String(g.items.length).padStart(2, '0') }));
+    const L = this.state.loaded || this.reduceM, D = this.state.drawer;
+    const answers = [
+      ['Do you work with international clients?', "Yes. I'm based in Nairobi and work remotely with teams across time zones."],
+      ['Can you join an existing team?', 'Yes. I can embed with your engineers or analysts, or own a workstream end to end.'],
+      ['What should I bring to a first call?', 'The decision you want to improve, where your data lives today, and any deadlines. Rough is fine.'],
+      ['Will my team be able to maintain it?', 'Yes. Every project ends with documentation and a handover, so the dashboards and models stay yours.'],
+    ];
+    return {
+      canvasRef: this.canvasRef, rootRef: this.rootRef, cursorRef: this.cursorRef, playRef: this.playRef,
+      headWords: [['Haute', 1], ['Couture', 1], ['AI.', 0], ['Bespoke', 0], ['Data.', 2]].map(([text, k], i) => ({ text, d: (0.09 * i + 0.05).toFixed(2) + 's', t: L ? 'translateY(0)' : 'translateY(110%)', ff: k === 1 ? "'Newsreader',serif" : 'inherit', fs: k === 1 ? 'italic' : 'normal', fw: k === 1 ? '400' : 'inherit', ls: k === 1 ? '-0.03em' : 'inherit', c: k === 2 ? 'var(--acc)' : 'inherit' })),
+      openDrawer: e => { e && e.preventDefault && e.preventDefault(); document.body.style.overflow = 'hidden'; this.setState({ drawer: true }); },
+      closeDrawer: () => this.close(),
+      drawerReady: this.state.ready,
+      dT: D ? 'translateX(0)' : 'translateX(calc(100% + 24px))', dOp: D ? '1' : '0', dPE: D ? 'auto' : 'none',
+      clock: this.state.now,
+      copyLabel: this.state.copied ? 'Copied ✓' : 'Click to copy',
+      copyEmail: () => { try { navigator.clipboard.writeText('erick@rafikicode.com'); } catch (e) {} this.setState({ copied: true }); clearTimeout(this.cpt); this.cpt = setTimeout(() => this.setState({ copied: false }), 1800); },
+      engagements: [
+        { t: 'Data audit', time: '2–3 weeks', d: 'A deep look at your data, quick wins, and a roadmap for what AI can realistically do for you.' },
+        { t: 'Build', time: '6–12 weeks', d: 'An AI system, predictive model or live dashboard, designed, shipped and handed over.' },
+        { t: 'Retainer', time: 'Monthly', d: 'Ongoing analytics and AI support for teams that need a data partner on call.' },
+      ],
+      answers: answers.map(([q, a], i) => { const open = this.state.faq === i; return { n: String(i + 1).padStart(2, '0'), q, a, open, rot: open ? 'rotate(45deg)' : 'rotate(0deg)', toggle: () => this.setState({ faq: open ? -1 : i }) }; }),
+      theme, themeLabel: theme === 'dark' ? 'Light' : 'Dark',
+      toggleTheme: () => this.setState({ theme: theme === 'dark' ? 'light' : 'dark' }),
+      isA: v === 'A', isB: v === 'B', isC: v === 'C',
+      showPortraitHere: v !== 'B',
+      proof: [
+        { v: '7+ yrs', k: 'turning complex data into business decisions' },
+        { v: 'Days → live', k: 'reporting cycles cut to real-time dashboards' },
+        { v: '$50K', k: 'in insurance claims recovered through analysis' },
+      ],
+      services: [
+        { n: '01', title: 'AI systems & automation', body: 'Custom AI tools, assistants and automated workflows built around how your business actually runs.', tags: ['LLM apps', 'RAG', 'Automation', 'Integrations'] },
+        { n: '02', title: 'Data analysis & BI', body: 'From messy spreadsheets to dashboards your team trusts, with reporting that moves from days to real-time.', tags: ['SQL', 'BigQuery', 'Tableau', 'Looker Studio'] },
+        { n: '03', title: 'Predictive analytics', body: 'Churn, demand and risk models that tell you what happens next, explained in plain business language.', tags: ['Forecasting', 'Classification', 'scikit-learn', 'XGBoost'] },
+      ],
+      tabs: tabDef.map(tb => ({ ...tb, bg: tb.id === track ? 'var(--fg)' : 'transparent', fg: tb.id === track ? 'var(--bg)' : 'var(--fg2)', select: () => this.setState({ track: tb.id }) })),
+      projects: track === 'ai' ? ai : data,
+      trackIntro: track === 'ai' ? 'Products built with Code Rafiki Technologies for retail, travel, hospitality and legal clients across Kenya.' : 'Analytics, dashboards and models from my data portfolio, across healthcare, e-commerce and telecom.',
+      moreHref: track === 'ai' ? 'https://www.rafikicode.com/work' : 'https://www.datascienceportfol.io/neo',
+      moreLabel: track === 'ai' ? 'All work at Code Rafiki' : 'All 19 data projects',
+      stackGroups: groups,
+      timeline: [
+        { years: '2022 — now', role: 'Freelance Data Analyst & AI Engineer', org: 'Independent', body: 'Consulting with clients on their data challenges: collecting from databases and APIs, exploratory analysis, predictive models and dashboards that communicate clearly.' },
+        { years: 'Now', role: 'AI & software', org: 'Code Rafiki Technologies', body: 'Building custom software, AI tools and automation for businesses in retail, travel, education and hospitality.' },
+        { years: '2018 — 2022', role: 'Data Analyst', org: 'TMC', body: 'Cleaned and reconciled hospital insurance-payable data against billing and claims, surfaced patterns in denials and payments, and reported to administrators, finance and insurers.' },
+      ],
+      certs: [
+        { y: '2024', name: 'Looker Studio' }, { y: '2024', name: 'SQL Associate, DataCamp' }, { y: '2023', name: 'Data Analytics, Coursera' },
+        { y: '2023', name: 'Data Preprocessing, Great Learning' }, { y: '2022', name: 'Data Analyst in SQL, DataCamp' }, { y: '2021', name: 'Tableau Desktop Specialist' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

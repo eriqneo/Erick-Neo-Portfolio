@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Logo from '../components/Logo.astro';
+import RollText from '../components/RollText.astro';
+import { site } from '../data/site';
+---
+
+<Layout title={`404 — ${site.name}`} noindex>
+  <header id="top" class="nf">
+    <a href="/" class="nf__mark" aria-label={site.name}><Logo /></a>
+    <span class="eyebrow nf__code">404</span>
+    <div class="nf__ctas">
+      <a href="#contact" class="btn btn--primary" data-drawer-open
+        ><RollText text="Book a discovery call" /><span aria-hidden="true">→</span></a
+      >
+      <a href="/work/" class="btn btn--outline"><RollText text="See the work" /></a>
+    </div>
+  </header>
+</Layout>
+
+<style>
+  .nf {
+    min-height: calc(100vh - 62px);
+    min-height: calc(100svh - 62px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(24px, 4vh, 40px);
+    padding: var(--pad-y) var(--pad-x);
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nf__mark {
+    color: var(--fg);
+  }
+
+  .nf__mark :global(.logo) {
+    height: clamp(96px, 16vw, 200px);
+  }
+
+  .nf__code {
+    letter-spacing: 0.3em;
+  }
+
+  .nf__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+</style>

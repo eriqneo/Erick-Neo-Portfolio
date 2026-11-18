@@ -1,0 +1,145 @@
+---
+import { Font } from 'astro:assets';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import ContactFooter from '../components/ContactFooter.astro';
+import ContactDrawer from '../components/ContactDrawer.astro';
+import Cursor from '../components/Cursor.astro';
+import AvatarSymbols from '../components/AvatarSymbols.astro';
+import { links, site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Absolute or root-relative OG image override. */
+  image?: string;
+  /** Keep this page out of search results (e.g. the 404 page). */
+  noindex?: boolean;
+}
+const { title = site.title, description = site.description, image = site.ogImage, noindex = false } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: site.name,
+  alternateName: site.fullName,
+  jobTitle: 'AI Engineer',
+  email: `mailto:${site.email}`,
+  url: canonical.href,
+  image: new URL(site.portrait.png, Astro.site).href,
+  address: { '@type': 'PostalAddress', addressLocality: 'Nairobi', addressCountry: 'KE' },
+  sameAs: [links.linkedin, links.github, links.dataPortfolio],
+};
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="author" content={site.name} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#12110f" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Theme + JS flag before first paint (no flash of the wrong theme). -->
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add('js');
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light' || t === 'dark') d.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Page arrived via a cross-document view transition: let morphing media skip its
+         arrival animation so the morph doesn't land on a clipped frame. -->
+    <script is:inline>
+      addEventListener('pagereveal', function (e) {
+        if (!e.viewTransition) return;
+        // Only on-screen media can be part of the morph; the rest keep their arrival.
+        document.querySelectorAll('[data-arrive][data-vt]').forEach(function (el) {
+          var r = el.getBoundingClientRect();
+          if (r.top < innerHeight && r.bottom > 0) el.classList.add('is-in');
+        });
+      });
+    </script>
+
+    <Font cssVariable="--font-sans" preload />
+    <Font cssVariable="--font-serif" />
+    <Font cssVariable="--font-mono" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <AvatarSymbols />
+    <div id="page">
+      <Nav />
+      <main id="main">
+        <slot />
+      </main>
+      <ContactFooter />
+    </div>
+    <Cursor />
+    <ContactDrawer />
+
+    <script>
+      import { initSmoothScroll } from '../scripts/smooth';
+      import { initReveal } from '../scripts/reveal';
+      import { initHeadlineReveal } from '../scripts/headline';
+      import { initClock } from '../scripts/clock';
+      import { initScrubWords } from '../scripts/scrub-words';
+      import { initScramble } from '../scripts/scramble';
+      import { initFlip } from '../scripts/flip';
+      import { initAvatars } from '../scripts/avatar';
+      import { initVideoAutoplay } from '../scripts/video-autoplay';
+      import { initArrive } from '../scripts/arrive';
+
+      initSmoothScroll();
+      initReveal();
+      initHeadlineReveal();
+      initClock();
+      initScrubWords();
+      initScramble();
+      initFlip();
+      initAvatars();
+      initVideoAutoplay();
+      initArrive();
+    </script>
+
+    <style is:global>
+      html.is-locked {
+        overflow: hidden;
+      }
+    </style>
+  </body>
+</html>

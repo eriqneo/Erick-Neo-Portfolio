@@ -1,0 +1,86 @@
+---
+/**
+ * Dot-matrix portrait of Erick in the logo's language. Wine accent dots are the eyes:
+ * they glance toward the cursor and blink now and then (see scripts/avatar.ts).
+ * Dark mode: highlights get the big dots; light mode: shadows do (print halftone),
+ * so neither theme reads as a photo negative.
+ */
+import avatar from '../data/avatar.json';
+import { site } from '../data/site';
+
+interface Props {
+  /** CSS height, e.g. "40px" or "clamp(160px, 18vw, 280px)". */
+  size?: string;
+  /** Hide from assistive tech when the context already names Erick. */
+  decorative?: boolean;
+  class?: string;
+}
+const { size = '48px', decorative = false, class: className } = Astro.props;
+const { cols, rows, eyes } = avatar;
+---
+
+<svg
+  class:list={['avatar', className]}
+  viewBox={`0 0 ${cols} ${rows}`}
+  style={`height:${size}`}
+  data-avatar
+  data-eyes={JSON.stringify(eyes)}
+  role={decorative ? undefined : 'img'}
+  aria-label={decorative ? undefined : site.portrait.alt}
+  aria-hidden={decorative ? 'true' : undefined}
+  focusable="false"
+>
+  <use href="#avatar-dk" class="avatar__dk" width={cols} height={rows} />
+  <use href="#avatar-lt" class="avatar__lt" width={cols} height={rows} />
+  <g class="avatar__eyes">
+    {eyes.map(([c, r]) => <circle class="avatar__eye" cx={c + 0.5} cy={r + 0.5} r="0.42" />)}
+  </g>
+</svg>
+
+<style is:global>
+  .avatar {
+    display: block;
+    width: auto;
+    aspect-ratio: 21 / 26;
+    color: var(--fg);
+    overflow: visible;
+  }
+
+  .avatar__dk,
+  .avatar__lt {
+    fill: currentColor;
+  }
+
+  .avatar__lt {
+    display: none;
+  }
+
+  /* Light tokens are active: light theme (not flipped), or dark theme while flipped. */
+  :root[data-theme='light']:not(.is-flipped) .avatar__dk,
+  :root[data-theme='dark'].is-flipped .avatar__dk {
+    display: none;
+  }
+
+  :root[data-theme='light']:not(.is-flipped) .avatar__lt,
+  :root[data-theme='dark'].is-flipped .avatar__lt {
+    display: inline;
+  }
+
+  .avatar__eye {
+    fill: var(--acc);
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 0.09s ease-in;
+  }
+
+  .avatar.is-blink .avatar__eye {
+    transform: scaleY(0.12);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .avatar__eyes {
+      transform: translate(calc(var(--lx, 0) * 1px), calc(var(--ly, 0) * 1px));
+      transition: transform 0.45s var(--ease-out);
+    }
+  }
+</style>

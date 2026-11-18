@@ -1,0 +1,11 @@
+{
+  "$comment": "Erick Neo dot-matrix monogram. 'o' = dot, 'A' = accent dot (wine), '.' = empty. Shared by src/data/logo.ts (site) and scripts/brand/generate.py (favicon, OG, brand kit).",
+  "step": 10,
+  "letterGap": 15,
+  "radius": { "regular": 3, "accent": 3.8 },
+  "radiusSmall": { "regular": 4.3, "accent": 4.7 },
+  "letters": [
+    ["oooooo", "oooooo", "oo....", "oo....", "oooAo.", "oo....", "oo....", "oooooo", "oooooo"],
+    ["oo...oo", "ooo..oo", "ooA..oo", "oo.o.oo", "oo.o.oo", "oo.o.oo", "oo..ooo", "oo..ooo", "oo...oo"]
+  ]
+}

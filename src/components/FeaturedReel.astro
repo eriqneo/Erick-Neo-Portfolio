@@ -1,0 +1,246 @@
+---
+/**
+ * Featured-work reel (inspiration: the hero work scroller). Wide screens: media scrolls up the
+ * centre while the current project's title (left) and "Case study ↗" (right) stay pinned.
+ * Phones: a simple stack. Projects come from `featured: true` in data/projects.ts.
+ */
+import ProjectMedia from './ProjectMedia.astro';
+import { allProjects, projectUrl } from '../data/projects';
+
+const featured = allProjects.filter((p) => p.featured);
+---
+
+<section class="reel" aria-labelledby="reel-title" data-reel>
+  <h2 id="reel-title" class="sr-only">Selected work</h2>
+
+  <div class="reel__side reel__side--left" aria-hidden="true">
+    <div class="reel__pin">
+      <div class="reel__titles">
+        {
+          featured.map((p, i) => (
+            <p class:list={['reel__title', { 'is-on': i === 0 }]} data-reel-title>
+              <span class="reel__kind">
+                {p.n} · {p.kind}
+              </span>
+              <span class="reel__mask">
+                <span class="reel__name">{p.title}</span>
+              </span>
+            </p>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+
+  <ol class="reel__media">
+    {
+      featured.map((p) => (
+        <li class="reel__item" data-reel-item data-href={projectUrl(p)} data-title={p.title}>
+          <a href={projectUrl(p)} class="reel__frame" data-cursor="view" aria-label={p.title}>
+            <ProjectMedia src={p.image} video={p.video} alt={p.imageAlt} sizes="(max-width: 900px) 92vw, 46vw" />
+          </a>
+          <div class="reel__caption">
+            <span class="reel__cap-title">{p.title}</span>
+            <span class="reel__kind">
+              {p.n} · {p.kind}
+            </span>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="reel__side reel__side--right">
+    <div class="reel__pin reel__pin--right">
+      <a href={projectUrl(featured[0])} class="reel__link" data-reel-link>
+        <span class="reel__arrow" aria-hidden="true">→</span>
+        <span>Case study ↗</span>
+        <span class="sr-only" data-reel-link-name>{featured[0].title}</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initReel } from '../scripts/reel';
+
+  document.querySelectorAll<HTMLElement>('[data-reel]').forEach(initReel);
+</script>
+
+<style>
+  .reel {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, min(46vw, 820px)) 1fr;
+    gap: 0 clamp(24px, 3vw, 56px);
+    padding: clamp(48px, 8vh, 96px) var(--pad-x);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .reel__media {
+    grid-column: 2;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(48px, 10vh, 120px);
+  }
+
+  .reel__item {
+    --z: 1;
+  }
+
+  .reel__frame {
+    display: block;
+    border-radius: var(--r-card);
+    transform: scale(var(--z));
+    transform-origin: 50% 50%;
+    will-change: transform;
+  }
+
+  .reel__caption {
+    display: none;
+  }
+
+  .reel__side {
+    position: relative;
+  }
+
+  /* The pinned rails: stick at the vertical centre for the whole section. */
+  .reel__pin {
+    position: sticky;
+    top: calc(50vh - 40px);
+  }
+
+  .reel__pin--right {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .reel__titles {
+    display: grid;
+  }
+
+  .reel__title {
+    grid-area: 1 / 1;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .reel__kind {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--mut);
+    letter-spacing: 0.04em;
+  }
+
+  .reel__mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+  }
+
+  .reel__name {
+    display: block;
+    font-weight: 600;
+    font-size: clamp(34px, 3.6vw, 64px);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+    color: var(--fg);
+    transform: translateY(105%);
+    transition: transform 0.8s var(--ease-out);
+  }
+
+  .reel__title .reel__kind {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .reel__title:global(.is-on) .reel__name {
+    transform: none;
+  }
+
+  .reel__title:global(.is-on) .reel__kind {
+    opacity: 1;
+    transition-delay: 0.15s;
+  }
+
+  /* Outgoing titles leave upwards, quickly, then stop rendering entirely (no glyph slivers
+     peeking past their masks while they wait in the shared grid cell). */
+  .reel__title:not(:global(.is-on)) {
+    visibility: hidden;
+    transition: visibility 0s linear 0.45s;
+  }
+
+  .reel__title:not(:global(.is-on)) .reel__name {
+    transform: translateY(-105%);
+    transition-duration: 0.45s;
+  }
+
+  .reel__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-weight: 600;
+    font-size: clamp(22px, 2vw, 34px);
+    letter-spacing: -0.03em;
+    color: var(--fg);
+  }
+
+  .reel__link:hover {
+    color: var(--acc);
+  }
+
+  .reel__arrow {
+    color: var(--acc);
+    font-size: 1.2em;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .reel__link:hover .reel__arrow {
+    transform: translateX(6px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reel__frame {
+      transform: none;
+    }
+  }
+
+  /* Phones / narrow tablets: a simple stack with captions; no pinned rails. */
+  @media (max-width: 899.98px) {
+    .reel {
+      grid-template-columns: 1fr;
+    }
+
+    .reel__media {
+      grid-column: 1;
+      gap: 40px;
+    }
+
+    .reel__side {
+      display: none;
+    }
+
+    .reel__frame {
+      transform: none;
+    }
+
+    .reel__caption {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .reel__cap-title {
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+  }
+</style>

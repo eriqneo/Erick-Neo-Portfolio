@@ -1,0 +1,169 @@
+---
+import ProjectCard from './ProjectCard.astro';
+import { tracks } from '../data/projects';
+---
+
+<section id="work" class="section" aria-labelledby="work-title">
+  <div class="work__head">
+    <div class="work__title">
+      <span class="eyebrow">02 — Selected work</span>
+      <h2 id="work-title" class="work__h2" data-arrive="words">Work</h2>
+    </div>
+    <div class="tabs" role="tablist" aria-labelledby="work-title" data-tabs>
+      {
+        tracks.map((t, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`tab-${t.id}`}
+            class="tab"
+            aria-selected={i === 0 ? 'true' : 'false'}
+            aria-controls={`panel-${t.id}`}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            {t.label}
+            <span class="tab__count">{t.projects.length}</span>
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  {
+    tracks.map((t, i) => (
+      <div role="tabpanel" id={`panel-${t.id}`} aria-labelledby={`tab-${t.id}`} hidden={i !== 0}>
+        <p class="work__intro">{t.intro}</p>
+        <div class="work__grid">
+          {t.projects.map((p) => (
+            <ProjectCard project={p} />
+          ))}
+        </div>
+        <div class="work__more">
+          <a href={t.moreHref} target="_blank" rel="noopener" class="btn btn--outline work__more-btn">
+            {t.moreLabel} <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </div>
+    ))
+  }
+</section>
+
+<script>
+  import { rearmReveal } from '../scripts/reveal';
+
+  const list = document.querySelector<HTMLElement>('[data-tabs]');
+  const tabs = [...(list?.querySelectorAll<HTMLButtonElement>('[role="tab"]') ?? [])];
+
+  const select = (tab: HTMLButtonElement, focus = false) => {
+    if (tab.getAttribute('aria-selected') === 'true') return;
+    tabs.forEach((t) => {
+      const on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      const panel = document.getElementById(t.getAttribute('aria-controls')!);
+      if (panel) {
+        panel.hidden = !on;
+        if (on) rearmReveal(panel.querySelectorAll('[data-reveal]'));
+      }
+    });
+    if (focus) tab.focus();
+  };
+
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', (e) => {
+      const keys: Record<string, number> = {
+        ArrowRight: (i + 1) % tabs.length,
+        ArrowLeft: (i - 1 + tabs.length) % tabs.length,
+        Home: 0,
+        End: tabs.length - 1,
+      };
+      if (!(e.key in keys)) return;
+      e.preventDefault();
+      select(tabs[keys[e.key]], true);
+    });
+  });
+</script>
+
+<style>
+  .work__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 28px;
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+
+  .work__title {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .work__h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(48px, 8vw, 128px);
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    padding: 5px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+  }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: var(--r-pill);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--fg2);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .tab[aria-selected='true'] {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .tab__count {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    opacity: 0.7;
+  }
+
+  .work__intro {
+    margin: 0 0 clamp(32px, 4vw, 48px);
+    max-width: 620px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--fg2);
+    text-wrap: pretty;
+  }
+
+  .work__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
+    gap: clamp(40px, 5vw, 72px) clamp(24px, 3vw, 40px);
+  }
+
+  .work__more {
+    display: flex;
+    justify-content: center;
+    margin-top: clamp(48px, 6vw, 80px);
+  }
+
+  .work__more-btn {
+    padding: 16px 26px;
+  }
+</style>

@@ -1,0 +1,78 @@
+---
+/**
+ * 16:10 project media: the screenshot when one exists, otherwise a grid placeholder.
+ * `vt` names the element for the cross-page morph (must be unique per page).
+ */
+import type { ProjectVideo } from '../data/projects';
+
+interface Props {
+  src?: string;
+  /** Silent loop; plays only while on screen (scripts/video-autoplay.ts). */
+  video?: ProjectVideo;
+  alt?: string;
+  /** Wipe-up + zoom-out when first scrolled into view (scripts/arrive.ts). Default on. */
+  arrive?: boolean;
+  /** `sizes` hint for the browser; defaults to a half-width grid cell. */
+  sizes?: string;
+  chip?: string;
+  vt?: string;
+  eager?: boolean;
+  class?: string;
+}
+const {
+  src,
+  video,
+  arrive = true,
+  alt = '',
+  sizes = '(max-width: 720px) 100vw, 50vw',
+  chip,
+  vt,
+  eager = false,
+  class: className,
+} = Astro.props;
+// Convention: every `name.webp` (1600w) has a `name-800.webp` sibling.
+const srcset = src?.endsWith('.webp') ? `${src.replace(/\.webp$/, '-800.webp')} 800w, ${src} 1600w` : undefined;
+---
+
+<span
+  class:list={['media', className]}
+  style={vt ? `view-transition-name:${vt}` : undefined}
+  data-arrive={arrive ? 'media' : undefined}
+  data-vt={vt ? '' : undefined}
+>
+  {
+    video ? (
+      <video
+        class="media__video"
+        muted
+        loop
+        playsinline
+        disablepictureinpicture
+        preload="none"
+        poster={video.poster}
+        width="1280"
+        height="800"
+        aria-hidden="true"
+        data-autoplay
+      >
+        {video.webm && <source src={video.webm} type="video/webm" />}
+        <source src={video.mp4} type="video/mp4" />
+      </video>
+    ) : src ? (
+      <img
+        src={src}
+        srcset={srcset}
+        sizes={srcset ? sizes : undefined}
+        alt={alt}
+        width="1600"
+        height="1000"
+        loading={eager ? 'eager' : 'lazy'}
+        fetchpriority={eager ? 'high' : undefined}
+        decoding="async"
+      />
+    ) : (
+      <span class="media__ph" />
+    )
+  }
+  {chip && <span class="media__chip">{chip}</span>}
+</span>

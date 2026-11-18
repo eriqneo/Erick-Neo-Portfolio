@@ -1,0 +1,390 @@
+---
+import RollText from './RollText.astro';
+import Avatar from './Avatar.astro';
+import { engagements, engagementNote } from '../data/engagements';
+import { faq } from '../data/faq';
+import { links, site } from '../data/site';
+---
+
+<div class="backdrop" data-drawer-backdrop aria-hidden="true"></div>
+<aside
+  class="drawer"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="drawer-title"
+  aria-hidden="true"
+  inert
+  data-drawer
+  data-lenis-prevent
+>
+  <div class="drawer__top">
+    <span class="drawer__who">
+      <Avatar size="34px" decorative />
+      <span class="label">Work with me</span>
+    </span>
+    <button type="button" class="drawer__close" data-drawer-close><RollText text="Close" /></button>
+  </div>
+
+  <h2 id="drawer-title" class="drawer__h2" data-arrive="words">
+    Engagements, contact details and <span class="serif-i">answers.</span>
+  </h2>
+
+  <section class="drawer__block" aria-labelledby="drawer-eng">
+    <h3 id="drawer-eng" class="label drawer__label">Engagements</h3>
+    {
+      engagements.map((g) => (
+        <div class="eng">
+          <h4>{g.title}</h4>
+          <span class="eng__time">{g.time}</span>
+          <p>{g.body}</p>
+        </div>
+      ))
+    }
+    <span class="drawer__note">{engagementNote}</span>
+  </section>
+
+  <section class="drawer__block drawer__block--contact" aria-labelledby="drawer-contact">
+    <h3 id="drawer-contact" class="label drawer__label">Contact</h3>
+    <button type="button" class="copy" data-copy={site.email}>
+      <span class="copy__email">{site.email}</span>
+      <span class="copy__label" data-copy-label aria-live="polite">Click to copy</span>
+    </button>
+    <div class="drawer__links">
+      <a href={links.linkedin} target="_blank" rel="noopener"><RollText text="LinkedIn ↗" /></a>
+      <a href={links.github} target="_blank" rel="noopener"><RollText text="GitHub ↗" /></a>
+      <a href={links.dataPortfolio} target="_blank" rel="noopener"><RollText text="Data portfolio ↗" /></a>
+    </div>
+    <div class="drawer__clock">
+      <span>Kenya/Nairobi</span><time data-clock class="drawer__time"></time>
+    </div>
+  </section>
+
+  <section class="drawer__block drawer__block--faq" aria-labelledby="drawer-faq">
+    <h3 id="drawer-faq" class="label drawer__label drawer__label--faq">Answers</h3>
+    {
+      faq.map((q, i) => (
+        <div class:list={['faq', { 'is-open': i === 0 }]}>
+          <span class="faq__fill" aria-hidden="true" />
+          <h4 class="faq__h">
+            <button
+              type="button"
+              class="faq__btn"
+              data-faq-toggle
+              id={`faq-q-${i}`}
+              aria-expanded={i === 0 ? 'true' : 'false'}
+              aria-controls={`faq-a-${i}`}
+            >
+              <span class="faq__n">{String(i + 1).padStart(2, '0')}</span>
+              <span class="faq__q">{q.q}</span>
+              <span class="faq__plus" aria-hidden="true">+</span>
+            </button>
+          </h4>
+          <div class="faq__panel" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`}>
+            <div class="faq__inner">
+              <p class="faq__a">{q.a}</p>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </section>
+</aside>
+
+<script>
+  import { initDrawer } from '../scripts/drawer';
+
+  const drawer = document.querySelector<HTMLElement>('[data-drawer]');
+  if (drawer) initDrawer(drawer);
+</script>
+
+<style>
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(8, 8, 7, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  .backdrop:global(.is-open) {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .drawer {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: min(580px, calc(100% - 24px));
+    z-index: 61;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: var(--r-drawer);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(calc(100% + 24px));
+    visibility: hidden;
+    transition:
+      transform 0.9s var(--ease-out),
+      visibility 0s linear 0.9s;
+  }
+
+  .drawer:global(.is-open) {
+    transform: translateX(0);
+    visibility: visible;
+    transition:
+      transform 0.9s var(--ease-out),
+      visibility 0s;
+  }
+
+  .drawer__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .drawer__who {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .drawer__close {
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fg);
+    transition: border-color 0.25s ease;
+  }
+
+  .drawer__close:hover {
+    border-color: var(--fg);
+  }
+
+  .drawer__h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(30px, 3.4vw, 44px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .drawer__block {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .drawer__block--contact {
+    gap: 14px;
+  }
+
+  .drawer__block--faq {
+    gap: 0;
+  }
+
+  .drawer__label {
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .drawer__label--faq {
+    padding-bottom: 6px;
+  }
+
+  .eng {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 16px;
+    padding: 18px 20px;
+    background: var(--bg2);
+    border-radius: var(--r-card);
+  }
+
+  .eng h4 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .eng__time {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--mut);
+    padding-top: 5px;
+  }
+
+  .eng p {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--fg2);
+  }
+
+  .drawer__note {
+    font-size: 15px;
+    color: var(--mut);
+  }
+
+  .copy {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    color: var(--fg);
+    transition: border-color 0.25s ease;
+  }
+
+  .copy:hover {
+    border-color: var(--acc);
+  }
+
+  .copy__email {
+    font-size: clamp(19px, 2vw, 24px);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    overflow-wrap: anywhere;
+  }
+
+  .copy__label {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--acc);
+    white-space: nowrap;
+  }
+
+  .drawer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    font-size: 16px;
+  }
+
+  .drawer__clock {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    color: var(--mut);
+  }
+
+  .drawer__time {
+    color: var(--fg);
+  }
+
+  .faq {
+    position: relative;
+    isolation: isolate;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Fill wipes in from the left on open, and out to the right on close. */
+  .faq__fill {
+    position: absolute;
+    inset: 0 -14px;
+    z-index: -1;
+    border-radius: var(--r-card);
+    background: var(--bg2);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.7s var(--ease-out);
+  }
+
+  .faq:global(.is-open) .faq__fill {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  /* Height animates via the 0fr → 1fr grid-row trick; hidden from AT once collapsed. */
+  .faq__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    visibility: hidden;
+    transition:
+      grid-template-rows 0.5s var(--ease-out),
+      visibility 0s linear 0.5s;
+  }
+
+  .faq:global(.is-open) .faq__panel {
+    grid-template-rows: 1fr;
+    visibility: visible;
+    transition:
+      grid-template-rows 0.6s var(--ease-out),
+      visibility 0s;
+  }
+
+  .faq__inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .faq__h {
+    margin: 0;
+    font: inherit;
+  }
+
+  .faq__btn {
+    width: 100%;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 18px 0;
+    color: var(--fg);
+    transition: color 0.25s ease;
+  }
+
+  .faq__btn:hover {
+    color: var(--acc);
+  }
+
+  .faq__n {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--mut);
+  }
+
+  .faq__q {
+    flex: 1;
+    font-size: 18px;
+    font-weight: 500;
+  }
+
+  .faq__plus {
+    flex: none;
+    font-size: 20px;
+    transition: transform 0.35s ease;
+  }
+
+  .faq__btn[aria-expanded='true'] .faq__plus {
+    transform: rotate(45deg);
+  }
+
+  .faq__a {
+    margin: 0;
+    padding: 0 32px 20px 36px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--fg2);
+  }
+</style>

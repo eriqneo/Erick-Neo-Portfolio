@@ -1,0 +1,23 @@
+---
+import { site } from '../data/site';
+
+interface Props {
+  class?: string;
+  loading?: 'eager' | 'lazy';
+}
+const { class: className, loading = 'lazy' } = Astro.props;
+const p = site.portrait;
+---
+
+<picture class={className}>
+  <source srcset={p.webp} type="image/webp" />
+  <img
+    src={p.png}
+    alt={p.alt}
+    width={p.width}
+    height={p.height}
+    loading={loading}
+    decoding="async"
+    style="width:100%;height:100%;object-fit:cover;display:block"
+  />
+</picture>

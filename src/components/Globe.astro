@@ -1,0 +1,55 @@
+---
+/** Wireframe globe whose meridians sweep to suggest rotation (CSS only; static under reduced motion). */
+---
+
+<svg class="globe" viewBox="0 0 24 24" width="1.25em" height="1.25em" aria-hidden="true" focusable="false">
+  <circle cx="12" cy="12" r="10"></circle>
+  <line x1="2" y1="12" x2="22" y2="12"></line>
+  <ellipse class="globe__m" cx="12" cy="12" rx="10" ry="10" style="--d:0s"></ellipse>
+  <ellipse class="globe__m" cx="12" cy="12" rx="10" ry="10" style="--d:-1.2s"></ellipse>
+  <ellipse class="globe__m" cx="12" cy="12" rx="10" ry="10" style="--d:-2.4s"></ellipse>
+</svg>
+
+<style>
+  .globe {
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.4;
+    vertical-align: -0.25em;
+  }
+
+  .globe__m {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: meridian 3.6s infinite;
+    animation-delay: var(--d);
+  }
+
+  /* scaleX follows cos(θ): ease-in to the edge-on point, ease-out back to full width. */
+  @keyframes meridian {
+    0% {
+      transform: scaleX(1);
+      animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+    }
+    50% {
+      transform: scaleX(0);
+      animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+    }
+    100% {
+      transform: scaleX(-1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .globe__m {
+      animation: none;
+    }
+    .globe__m:nth-of-type(2) {
+      transform: scaleX(0.5);
+    }
+    .globe__m:nth-of-type(3) {
+      transform: scaleX(0);
+    }
+  }
+</style>

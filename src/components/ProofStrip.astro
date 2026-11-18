@@ -1,0 +1,44 @@
+---
+import { proof } from '../data/proof';
+---
+
+<section class="proof">
+  {
+    proof.map((p) => (
+      <div class="proof__cell" data-reveal>
+        <span class="proof__v">{p.value}</span>
+        <span class="proof__k">{p.label}</span>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .proof {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    border-bottom: 1px solid var(--line);
+  }
+
+  .proof__cell {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: clamp(28px, 3.5vw, 44px) var(--pad-x);
+    border-right: 1px solid var(--line);
+  }
+
+  .proof__v {
+    font-weight: 600;
+    font-size: clamp(36px, 4vw, 56px);
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  .proof__k {
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--fg2);
+    max-width: 280px;
+  }
+</style>

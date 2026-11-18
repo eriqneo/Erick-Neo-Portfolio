@@ -1,0 +1,424 @@
+---
+import RollText from './RollText.astro';
+import Logo from './Logo.astro';
+import Avatar from './Avatar.astro';
+import { navLinks, site } from '../data/site';
+
+// On sub-pages, section links point back to the homepage.
+const isHome = Astro.url.pathname === '/';
+const base = isHome ? '' : '/';
+const brandHref = isHome ? '#top' : '/';
+---
+
+<nav class="nav" aria-label="Primary">
+  <a href={brandHref} class="brand" aria-label={site.name}
+    ><Logo small class="brand__mark" /><span class="brand__name">{site.name}</span></a
+  >
+  <a href="#contact" class="status-link status-link--side" data-drawer-open
+    >{site.availability}<span class="status-link__arrow" aria-hidden="true">→</span></a
+  >
+  <p class="nav__id" data-arrive="words">
+    <Avatar size="20px" decorative class="nav__face" />
+    <span class="nav__name">{site.name}</span>
+    <span class="nav__role">· {site.role}</span>
+    <a href="#contact" class="status-link" data-drawer-open
+      >{site.availability}<span class="status-link__arrow" aria-hidden="true">→</span></a
+    >
+  </p>
+  <div class="nav__right">
+    <div class="nav__links" id="nav-links" data-lenis-prevent>
+      <a href="#contact" class="status-link status-link--menu" data-drawer-open
+        >{site.availability}<span class="status-link__arrow" aria-hidden="true">→</span></a
+      >
+      {
+        navLinks.map((l) => (
+          <a href={!isHome && l.href === '#work' ? '/work/' : `${base}${l.href}`} class="nav__link" data-spy={isHome ? l.href.slice(1) : undefined}>
+            <RollText text={l.label} />
+          </a>
+        ))
+      }
+      <button type="button" class="theme-toggle" data-theme-toggle aria-label="Toggle colour theme">
+        <span class="theme-toggle__icon" aria-hidden="true"></span><span data-theme-label>Light</span>
+      </button>
+    </div>
+    <a href="#contact" class="nav__cta" data-drawer-open><RollText text="Let's talk" /></a>
+    <button type="button" class="nav__menu" aria-expanded="false" aria-controls="nav-links" data-menu-toggle>
+      <span data-menu-label>Menu</span>
+    </button>
+  </div>
+</nav>
+
+<script>
+  import { initThemeToggle } from '../scripts/theme';
+
+  initThemeToggle();
+
+  // Scroll-spy: highlight the nav link of the section in view (homepage only).
+  const spyLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-spy]')];
+  const sections = spyLinks
+    .map((a) => document.getElementById(a.dataset.spy!))
+    .filter((el): el is HTMLElement => !!el);
+  if (sections.length) {
+    const visible = new Map<string, number>();
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => visible.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
+        // Pick the section covering most of the band around the viewport's upper third.
+        let best = '';
+        let max = 0;
+        visible.forEach((r, id) => {
+          if (r > max) [best, max] = [id, r];
+        });
+        spyLinks.forEach((a) => {
+          const on = a.dataset.spy === best;
+          a.classList.toggle('is-active', on);
+          if (on) a.setAttribute('aria-current', 'true');
+          else a.removeAttribute('aria-current');
+        });
+      },
+      { rootMargin: '-30% 0px -60% 0px', threshold: [0, 0.01, 0.25, 0.5, 0.75, 1] },
+    );
+    sections.forEach((s) => io.observe(s));
+  }
+
+  // Mobile menu (< 720px)
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = document.getElementById('nav-links');
+  const label = toggle?.querySelector('[data-menu-label]');
+  const mq = matchMedia('(max-width: 719.98px)');
+
+  const setOpen = (open: boolean) => {
+    if (!toggle || !panel) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    panel.classList.toggle('is-open', open);
+    if (label) label.textContent = open ? 'Close' : 'Menu';
+  };
+
+  toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+  panel?.addEventListener('click', (e) => {
+    if ((e.target as Element).closest('a')) setOpen(false);
+  });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
+  });
+  mq.addEventListener('change', (e) => {
+    if (!e.matches) setOpen(false);
+  });
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px var(--pad-x);
+    background: var(--nav);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    view-transition-name: site-nav;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+  }
+
+  .brand :global(.brand__mark) {
+    height: 20px;
+    color: var(--fg);
+  }
+
+  /* Centred name + title (wide screens only; see the ≥1440px block below). */
+  .nav__id {
+    display: none;
+    margin: 0;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .nav__id :global(.nav__face) {
+    flex: none;
+  }
+
+  .nav__name {
+    color: var(--fg);
+  }
+
+  .nav__role {
+    color: var(--mut);
+    font-weight: 500;
+  }
+
+  /* "TAKING NEW CLIENTS →": conspicuous CTA in the nav's mono caps; opens the contact drawer. */
+  .status-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 11px;
+    border: 1px solid var(--acc);
+    border-radius: var(--r-pill);
+    color: var(--acc);
+    font-family: var(--ff-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: auto;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .status-link:is(:hover, :focus-visible) {
+    background: var(--acc);
+    color: var(--onacc);
+  }
+
+  .status-link__arrow {
+    transition: transform 0.45s var(--ease-out);
+  }
+
+  .status-link:is(:hover, :focus-visible) .status-link__arrow {
+    transform: translateX(3px);
+  }
+
+  /* Which copy shows where: centred label ≥1440, beside the brand 1000–1439, menu on phones. */
+  .status-link--side,
+  .status-link--menu {
+    display: none;
+  }
+
+  @media (min-width: 1000px) and (max-width: 1439.98px) {
+    .status-link--side {
+      display: inline-flex;
+      margin-right: auto;
+    }
+
+    .nav {
+      gap: 16px;
+    }
+  }
+
+  @media (max-width: 719.98px) {
+    .status-link--menu {
+      display: inline-flex;
+      margin: 12px 0 8px;
+      font-size: 12.5px;
+      padding: 9px 14px;
+    }
+  }
+
+
+  .nav__right,
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 2.2vw, 30px);
+    font-family: var(--ff-mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .nav__link {
+    color: var(--mut);
+    padding: 4px 8px;
+    margin: -4px -8px;
+    border-radius: var(--r-pill);
+    transition:
+      color 0.25s ease,
+      background-color 0.35s var(--ease-out);
+  }
+
+  .nav__link:hover,
+  .nav__link.is-active {
+    color: var(--fg);
+  }
+
+  .nav__link.is-active {
+    background: var(--bg2);
+  }
+
+  .theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    color: var(--fg);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    transition: border-color 0.25s ease;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--fg);
+  }
+
+  .theme-toggle__icon {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid var(--fg);
+    background: linear-gradient(90deg, var(--fg) 50%, transparent 50%);
+  }
+
+  .nav__cta {
+    display: flex;
+    padding: 9px 16px;
+    background: var(--fg);
+    color: var(--bg);
+    border-radius: var(--r-pill);
+    transition:
+      background-color 0.25s ease,
+      color 0.25s ease;
+  }
+
+  .nav__cta:hover {
+    background: var(--acc);
+    color: var(--onacc);
+  }
+
+  .nav__menu {
+    display: none;
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    color: var(--fg);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 719.98px) {
+    .nav__right {
+      gap: 8px;
+    }
+
+    .nav__menu {
+      display: flex;
+    }
+
+    .nav__links {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 8px var(--pad-x) 24px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+      max-height: calc(100dvh - 66px);
+      overflow-y: auto;
+    }
+
+    :global(.js) .nav__links:not(.is-open) {
+      display: none;
+    }
+
+    .nav__link {
+      width: 100%;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--ff-sans);
+      font-size: 28px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      text-transform: none;
+      color: var(--fg);
+      margin: 0;
+      border-radius: 0;
+    }
+
+    .nav__link.is-active {
+      background: none;
+      color: var(--acc);
+    }
+
+    .theme-toggle {
+      margin-top: 20px;
+    }
+  }
+
+  /* No-JS fallback on small screens: links simply wrap below. */
+  @media (max-width: 719.98px) {
+    :global(html:not(.js)) .nav__links {
+      position: static;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+    :global(html:not(.js)) .nav__menu {
+      display: none;
+    }
+    :global(html:not(.js)) .nav {
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Wide screens: links move left beside the monogram, name + title sit dead centre,
+     theme toggle + Let's talk stay right (inspiration layout). */
+  @media (min-width: 1440px) {
+    .nav {
+      justify-content: flex-start;
+      gap: clamp(14px, 1.4vw, 26px);
+    }
+
+    .nav__right,
+    .nav__links {
+      display: contents;
+    }
+
+    .brand__name {
+      display: none;
+    }
+
+    .brand {
+      margin-right: clamp(8px, 1vw, 18px);
+    }
+
+    .nav__id {
+      display: flex;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    /* push theme + Let's talk to the right edge */
+    .nav .theme-toggle {
+      margin-left: auto;
+    }
+  }
+
+  /* Mid-size laptops: slightly smaller label so it keeps clear of the links. */
+  @media (min-width: 1440px) and (max-width: 1599.98px) {
+    .nav__id {
+      font-size: 14px;
+      gap: 8px;
+    }
+  }
+</style>

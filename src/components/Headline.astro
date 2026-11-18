@@ -1,0 +1,21 @@
+---
+/** "Haute Couture AI. Bespoke Data." split into masked words for the load reveal. */
+const words: [string, 0 | 1 | 2][] = [
+  ['Haute', 1],
+  ['Couture', 1],
+  ['AI.', 0],
+  ['Bespoke', 0],
+  ['Data.', 2],
+];
+const cls = { 0: '', 1: 'hw--serif', 2: 'hw--acc' } as const;
+---
+
+<span class="sr-only">{words.map(([w]) => w).join(' ')}</span><span aria-hidden="true"
+  >{
+    words.map(([text, k], i) => (
+      <span class:list={['hw', cls[k]]} style={`--d:${(0.09 * i + 0.05).toFixed(2)}s`}>
+        <span>{text}</span>
+      </span>
+    ))
+  }</span
+>

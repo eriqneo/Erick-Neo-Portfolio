@@ -1,0 +1,282 @@
+---
+/**
+ * Footer shuffle stack: every project as a polaroid in a loose pile. The dot-matrix button
+ * flicks the top card away to reveal the next (scripts/shuffle-stack.ts).
+ * Accessibility: only the top card is exposed/focusable; the button's name matches its visible
+ * hand-drawn note ("Shuffle the work"); each shuffle announces the new top project.
+ */
+import { allProjects, projectUrl } from '../data/projects';
+
+const cards = allProjects.filter((p) => p.image);
+/** Visible annotation beside the button — also the button's accessible name (label-in-name). */
+const NOTE = 'Shuffle the work';
+// Deterministic "tossed on a table" tilt per card — alternating, so neighbours differ visibly.
+const TILTS = [-3.5, 4, -6, 2.5, 5.5, -2, 3, -4.5];
+const tilt = (i: number) => TILTS[i % TILTS.length];
+const small = (src: string) => src.replace(/\.webp$/, '-800.webp');
+
+// Dot-matrix shuffle glyph (5×5, logo language: one wine accent dot = the arrow head).
+const GLYPH = ['.ooo.', 'o...o', 'o...o', 'o...A', '.oo..'];
+const dots = GLYPH.flatMap((row, y) =>
+  [...row].flatMap((ch, x) => (ch === '.' ? [] : [{ x: x + 0.5, y: y + 0.5, a: ch === 'A' }])),
+);
+---
+
+<div class="fstack" data-fstack>
+  <div class="fstack__pile">
+    {
+      cards.map((p, i) => (
+        <a
+          href={projectUrl(p)}
+          class="fcard"
+          data-fcard
+          data-tilt={tilt(i)}
+          data-title={p.title}
+          style={`transform: rotate(${tilt(i)}deg); z-index:${cards.length - i}`}
+          data-cursor="view"
+        >
+          <img src={small(p.image!)} alt="" width="800" height="500" loading="lazy" decoding="async" />
+          <span class="fcard__cap">
+            <span class="fcard__title">{p.title}</span>
+            <span class="fcard__kind">
+              {p.n} · {p.kind}
+            </span>
+          </span>
+        </a>
+      ))
+    }
+  </div>
+  <div class="fstack__ctrl">
+    <button type="button" class="fstack__next" data-fstack-next aria-label={NOTE}>
+      <svg viewBox="0 0 5 5" aria-hidden="true" focusable="false">
+        {dots.map((d) => <circle cx={d.x} cy={d.y} r={d.a ? 0.44 : 0.36} class:list={{ acc: d.a }} />)}
+      </svg>
+    </button>
+    <span class="fstack__note" aria-hidden="true">
+      <svg class="fstack__arrow" viewBox="0 0 64 40" focusable="false">
+        <!-- loose hand-drawn curve from the note down-left to the button, with an open head -->
+        <path class="fstack__stroke" pathLength="1" d="M60 6 C 44 1, 24 4, 14 16 C 10 21, 8 26, 7 31" />
+        <path class="fstack__stroke fstack__stroke--head" pathLength="1" d="M1 24 L7 32 L14 26" />
+      </svg>
+      <span class="fstack__text">{NOTE}</span>
+    </span>
+  </div>
+  <span class="sr-only" aria-live="polite" data-fstack-live></span>
+</div>
+
+<script>
+  import { initShuffleStack } from '../scripts/shuffle-stack';
+
+  document.querySelectorAll<HTMLElement>('[data-fstack]').forEach(initShuffleStack);
+</script>
+
+<style>
+  .fstack {
+    --w: clamp(220px, 22vw, 320px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .fstack__pile {
+    position: relative;
+    width: var(--w);
+    /* image 16:10 + frame padding + caption */
+    height: calc(var(--w) * 0.625 + 12px * 2 + 46px);
+  }
+
+  .fcard {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 12px 0;
+    background: var(--fg);
+    color: var(--bg);
+    border-radius: 6px;
+    transform-origin: 50% 60%;
+    transition:
+      transform 0.6s var(--ease-out),
+      opacity 0.4s ease;
+  }
+
+  .fcard:hover {
+    color: var(--bg);
+  }
+
+  .fcard:global(.is-snapping) {
+    transition: none;
+  }
+
+  /* Cards wait off the table until the stack is first seen, then get dealt in. */
+  @media (prefers-reduced-motion: no-preference) {
+    .fstack:global(.is-ready):not(:global(.is-seen)) .fcard {
+      opacity: 0 !important;
+    }
+  }
+
+  /* Before JS: only the first card shows (no layout jump on init). */
+  .fstack:not(:global(.is-ready)) .fcard:not(:first-child) {
+    opacity: 0;
+  }
+
+  .fcard img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    height: auto;
+    object-fit: cover;
+    border-radius: 2px;
+    background: var(--bg2);
+  }
+
+  .fcard__cap {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .fcard__title {
+    font-weight: 600;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fcard__kind {
+    flex: none;
+    font-family: var(--ff-mono);
+    font-size: 11px;
+    color: color-mix(in srgb, var(--bg) 60%, transparent);
+  }
+
+  .fstack__ctrl {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    /* keep the button centred under the pile; the note hangs to its right */
+    margin-right: calc(-1 * (var(--note-w, 180px) + 6px));
+  }
+
+  @media (max-width: 479.98px) {
+    .fstack__ctrl {
+      --note-w: 150px;
+      margin-right: 0; /* centre button + note together so nothing overflows */
+    }
+
+    .fstack__text {
+      font-size: 18px !important;
+    }
+  }
+
+  .fstack__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 2px;
+    width: var(--note-w, 180px);
+    margin-top: -14px;
+    color: var(--mut);
+    transform: rotate(-3deg);
+    transform-origin: left center;
+    pointer-events: none;
+  }
+
+  .fstack__arrow {
+    flex: none;
+    width: 46px;
+    height: 30px;
+    margin-top: 10px;
+    overflow: visible;
+  }
+
+  .fstack__stroke {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .fstack__text {
+    font-family: var(--ff-serif);
+    font-style: italic;
+    font-size: 21px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--fg2);
+    white-space: nowrap;
+  }
+
+  /* Draw the arrow in (and fade the note up) the first time the stack scrolls into view. */
+  @media (prefers-reduced-motion: no-preference) {
+    .fstack__stroke {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      transition: stroke-dashoffset 0.9s var(--ease-out) 0.25s;
+    }
+
+    .fstack__stroke--head {
+      transition-delay: 0.95s;
+      transition-duration: 0.35s;
+    }
+
+    .fstack__text {
+      opacity: 0;
+      transform: translateY(6px);
+      transition:
+        opacity 0.6s ease 0.1s,
+        transform 0.8s var(--ease-out) 0.1s;
+    }
+
+    .fstack:global(.is-seen) .fstack__stroke {
+      stroke-dashoffset: 0;
+    }
+
+    .fstack:global(.is-seen) .fstack__text {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .fstack__next {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    color: var(--fg);
+    transition:
+      border-color 0.3s ease,
+      transform 0.5s var(--ease-out);
+  }
+
+  .fstack__next svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .fstack__next .acc {
+    fill: var(--acc);
+  }
+
+  .fstack__next:hover {
+    border-color: var(--fg);
+  }
+
+  .fstack__next:hover svg {
+    transform: rotate(90deg);
+  }
+
+  .fstack__next:active {
+    transform: scale(0.94);
+  }
+</style>

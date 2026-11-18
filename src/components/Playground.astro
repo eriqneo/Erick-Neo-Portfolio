@@ -1,0 +1,114 @@
+---
+const bodies = [
+  { c: 'N', k: 'n' },
+  { c: 'E', k: 'e' },
+  { c: 'O', k: 'o' },
+  { c: 'A', k: 'a' },
+  { c: 'I', k: 'i' },
+];
+---
+
+<section id="play" class="play" data-play data-flip>
+  <div class="fig-caption" aria-hidden="true">
+    <span data-scramble>FIG. 02 — OUTLIERS, HANDLED</span>
+    <span data-scramble>Drag &amp; throw ↗</span>
+  </div>
+  <p class="play__line" data-arrive="words">
+    When every dashboard looks the same, <span class="serif-i play__acc">details</span> make the difference.
+  </p>
+  {
+    bodies.map((b) => (
+      <div class:list={['body', `body--${b.k}`]} data-body aria-hidden="true">
+        {b.c}
+      </div>
+    ))
+  }
+</section>
+
+<script>
+  import { initPhysicsLetters } from '../scripts/physics-letters';
+
+  const box = document.querySelector<HTMLElement>('[data-play]');
+  if (box) initPhysicsLetters(box);
+</script>
+
+<style>
+  .play {
+    position: relative;
+    height: clamp(440px, 64vh, 640px);
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+    --s: clamp(96px, 13vw, 180px);
+  }
+
+  .play__line {
+    position: absolute;
+    left: 50%;
+    top: 38%;
+    transform: translate(-50%, -50%);
+    width: min(900px, calc(100% - 48px));
+    margin: 0;
+    text-align: center;
+    font-weight: 600;
+    font-size: clamp(28px, 4vw, 56px);
+    line-height: 1.05;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+    pointer-events: none;
+  }
+
+  .play__acc {
+    color: var(--acc);
+  }
+
+  .body {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--s);
+    height: var(--s);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: calc(var(--s) * 0.56);
+    letter-spacing: -0.04em;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    translate: 0 -600px;
+  }
+
+  .body:global(.is-dragging) {
+    cursor: grabbing;
+    z-index: 2;
+  }
+
+  .body--n {
+    border-radius: 50%;
+    background: var(--acc);
+    color: var(--onacc);
+  }
+  .body--e {
+    border-radius: 22%;
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .body--o {
+    border-radius: 50%;
+    background: transparent;
+    color: var(--fg);
+    border: 2px solid var(--fg);
+  }
+  .body--a {
+    border-radius: 22%;
+    background: var(--bg2);
+    color: var(--fg);
+  }
+  .body--i {
+    border-radius: 50%;
+    background: var(--fg);
+    color: var(--bg);
+  }
+</style>

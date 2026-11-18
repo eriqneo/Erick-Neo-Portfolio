@@ -1,0 +1,49 @@
+---
+---
+
+<div class="cursor" aria-hidden="true" data-cursor-el>VIEW ↗</div>
+
+<script>
+  import { initCursor } from '../scripts/cursor';
+
+  const el = document.querySelector<HTMLElement>('[data-cursor-el]');
+  if (el) initCursor(el);
+</script>
+
+<style>
+  .cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 55;
+    width: 92px;
+    height: 92px;
+    margin: -46px 0 0 -46px;
+    border-radius: 50%;
+    background: var(--acc);
+    color: var(--onacc);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    pointer-events: none;
+    opacity: 0;
+    scale: 0;
+    transition:
+      scale 0.45s var(--ease-out),
+      opacity 0.3s ease;
+  }
+
+  .cursor:global(.is-on) {
+    opacity: 1;
+    scale: 1;
+  }
+
+  @media not (pointer: fine) {
+    .cursor {
+      display: none;
+    }
+  }
+</style>

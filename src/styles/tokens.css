@@ -1,0 +1,116 @@
+/* Design tokens — exact values from the v3 handoff.
+   Dark is the default; light is opt-in via [data-theme="light"] on <html>.
+   .is-flipped (set by flip.ts while a [data-flip] section is centred) temporarily
+   swaps to the opposite set without touching the visitor's saved theme. */
+
+/* Registered colour tokens: typed as <color> so the browser can interpolate them.
+   A theme switch or backdrop flip then animates the tokens once on <html> and every
+   element using them inherits the in-between value — one animation, not hundreds. */
+@property --bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #12110f;
+}
+@property --bg2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1c1a17;
+}
+@property --nav {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(18, 17, 15, 0.8);
+}
+@property --fg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ece8e1;
+}
+@property --fg2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #cfc9bf;
+}
+@property --mut {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #a9a398;
+}
+@property --line {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgba(236, 232, 225, 0.14);
+}
+@property --acc {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #c24d64;
+}
+@property --onacc {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffffff;
+}
+
+html {
+  transition:
+    --bg 0.6s ease,
+    --bg2 0.6s ease,
+    --nav 0.6s ease,
+    --fg 0.6s ease,
+    --fg2 0.6s ease,
+    --mut 0.6s ease,
+    --line 0.6s ease,
+    --acc 0.6s ease;
+}
+
+:root,
+[data-theme='dark'],
+[data-theme='light'].is-flipped {
+  --bg: #12110f;
+  --bg2: #1c1a17;
+  --nav: rgba(18, 17, 15, 0.8);
+  --fg: #ece8e1;
+  --fg2: #cfc9bf;
+  --mut: #a9a398;
+  --line: rgba(236, 232, 225, 0.14);
+  --acc: #c24d64; /* wine/maroon, lifted for dark bg */
+  --onacc: #ffffff;
+  color-scheme: dark;
+}
+
+[data-theme='light'],
+[data-theme='dark'].is-flipped {
+  --bg: #f4f1ea;
+  --bg2: #e8e3d9;
+  --nav: rgba(244, 241, 234, 0.82);
+  --fg: #171512;
+  --fg2: #3b3731;
+  --mut: #665f56;
+  --line: rgba(23, 21, 18, 0.14);
+  --acc: #7d1d32; /* deep maroon */
+  --onacc: #ffffff;
+  color-scheme: light;
+}
+
+:root {
+  --ok: #5fbf73; /* status green */
+
+  /* --font-sans / --font-serif / --font-mono are injected by Astro's Fonts API */
+  --ff-sans: var(--font-sans, 'Familjen Grotesk', system-ui, sans-serif);
+  --ff-serif: var(--font-serif, 'Newsreader', Georgia, serif);
+  --ff-mono: var(--font-mono, 'IBM Plex Mono', ui-monospace, monospace);
+
+  --pad-x: clamp(20px, 4vw, 56px);
+  --pad-y: clamp(72px, 10vw, 140px);
+
+  --r-pill: 999px;
+  --r-card: 14px;
+  --r-portrait: 16px;
+  --r-drawer: 18px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-roll: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --nav-offset: 70px;
+}

@@ -1,0 +1,97 @@
+---
+import ProjectMedia from './ProjectMedia.astro';
+import { projectUrl, type Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+const { project: p } = Astro.props;
+const url = projectUrl(p);
+---
+
+<article class="card" data-reveal>
+  <a href={url} class="card__media" data-cursor="view" tabindex="-1" aria-hidden="true">
+    <ProjectMedia src={p.image} video={p.video} chip={`${p.n} · ${p.kind}`} vt={`media-${p.slug}`} />
+  </a>
+  <a href={url} class="card__title">
+    <h3 style={`view-transition-name:title-${p.slug}`}>{p.title}</h3>
+    <span class="card__cta">Case study ↗</span>
+  </a>
+  <p class="card__body">{p.body}</p>
+  <ul class="card__stack">
+    {p.stack.map((t) => <li>{t}</li>)}
+  </ul>
+</article>
+
+<style>
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .card__media {
+    display: block;
+    border-radius: var(--r-card);
+  }
+
+  .card__media :global(.media) {
+    transition: transform 0.9s var(--ease-out);
+  }
+
+  .card__media:hover :global(.media) {
+    transform: scale(0.985);
+  }
+
+  .card__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    color: var(--fg);
+    transition: color 0.25s ease;
+  }
+
+  .card__title:hover {
+    color: var(--acc);
+  }
+
+  h3 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(24px, 2.4vw, 32px);
+    letter-spacing: -0.025em;
+  }
+
+  .card__cta {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .card__body {
+    margin: -6px 0 0;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--fg2);
+    max-width: 560px;
+    text-wrap: pretty;
+  }
+
+  .card__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .card__stack li {
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    color: var(--mut);
+    padding: 4px 0;
+    border-bottom: 1px solid var(--line);
+  }
+</style>
