@@ -73,6 +73,9 @@ const jsonLd = {
               f.parentNode.insertBefore(j, f);
             })(window, document, 'script', 'dataLayer', gtmId);
           };
+          // GTM Preview / Tag Assistant debug sessions (URL carries gtm_debug): load the
+          // container so Tag Assistant can connect. Consent stays denied — nothing is granted.
+          if (/[?&]gtm_debug=/.test(location.search)) window.__loadGtm();
           // Returning visitor who allowed analytics (choice valid for 12 months).
           try {
             var c = JSON.parse(localStorage.getItem('consent:analytics') || 'null');
