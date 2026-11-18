@@ -1,0 +1,305 @@
+---
+/**
+ * Privacy notice. Describes what this site actually does (verified in code + live):
+ * analytics only after consent, two local-storage preferences, Vercel hosting logs, email.
+ * ⚠ Drafted for Erick to review — not legal advice. Update UPDATED + the facts if anything changes
+ *   (e.g. new tools, a contact form, or a different analytics setup).
+ */
+import Layout from '../layouts/Layout.astro';
+import { links, site } from '../data/site';
+
+const UPDATED = '18 November 2026';
+---
+
+<Layout
+  title={`Privacy — ${site.name}`}
+  description="How this site handles your data: analytics only with your consent, no ads, nothing sold."
+>
+  <article id="top" class="pv">
+    <header class="pv__head">
+      <span class="eyebrow">Privacy</span>
+      <h1 class="pv__h1" data-arrive="words">
+        Privacy, <span class="serif-i">tailored too.</span>
+      </h1>
+      <p class="pv__updated">Last updated {UPDATED}</p>
+    </header>
+
+    <section class="pv__short" aria-labelledby="pv-short">
+      <h2 id="pv-short" class="label">In short</h2>
+      <ul>
+        <li>No ads, no tracking for advertising, and I never sell your data.</li>
+        <li>Analytics (Google Analytics) only runs if you click <strong>Allow</strong>. Until then, nothing from Google loads.</li>
+        <li>No forms, no accounts, no third-party embeds. Fonts and videos are served from this site.</li>
+        <li>You can change your choice any time: <button type="button" class="pv__inline" data-consent-open>Cookie settings</button>.</li>
+      </ul>
+    </section>
+
+    <div class="pv__body">
+      <section>
+        <h2>Who is responsible</h2>
+        <p>
+          This site is run by {site.name} ({site.fullName}), an AI engineer based in Nairobi, Kenya. I am the data
+          controller for the information described here. Questions or requests:
+          <a href={`mailto:${site.email}`}>{site.email}</a>.
+        </p>
+      </section>
+
+      <section>
+        <h2>Analytics — only with your consent</h2>
+        <p>
+          If you click <strong>Allow</strong> on the cookie card, I use Google Analytics 4, loaded through Google Tag
+          Manager, to understand how the site is used — for example which pages and projects people view, roughly where
+          visitors come from (country/city level), and what device and browser they use. This helps me see which work
+          resonates.
+        </p>
+        <p>
+          If you click <strong>Decline</strong>, or make no choice, Google Tag Manager and Google Analytics are not loaded
+          at all. Advertising features are always switched off.
+        </p>
+        <p>
+          Google Analytics is provided by Google (Google Ireland Limited / Google LLC), which processes this data on my
+          behalf and may transfer it to servers outside Kenya, including in the United States. Google Analytics 4 does not
+          log or store IP addresses. Analytics data is kept for the retention period set in my Google Analytics account,
+          which is no longer than 14 months.
+        </p>
+        <p>The legal basis is your consent, which you can withdraw at any time.</p>
+      </section>
+
+      <section>
+        <h2>Cookies and browser storage</h2>
+        <div class="pv__table-wrap">
+          <table class="pv__table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Purpose</th>
+                <th scope="col">Lasts</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>_ga</code>, <code>_ga_&lt;id&gt;</code></td>
+                <td>Cookie (Google Analytics)</td>
+                <td>Distinguishes visits for analytics. <em>Only set after you click Allow.</em></td>
+                <td>Up to 2 years</td>
+              </tr>
+              <tr>
+                <td><code>consent:analytics</code></td>
+                <td>Local storage</td>
+                <td>Remembers your Allow / Decline choice so you aren't asked on every visit.</td>
+                <td>12 months, then I ask again</td>
+              </tr>
+              <tr>
+                <td><code>theme</code></td>
+                <td>Local storage</td>
+                <td>Remembers light or dark mode, if you switch it.</td>
+                <td>Until you clear it</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Local storage stays in your browser and is never sent to me or anyone else. Declining analytics also removes any
+          Google Analytics cookies already set on this site.
+        </p>
+      </section>
+
+      <section>
+        <h2>Hosting</h2>
+        <p>
+          The site is hosted by Vercel Inc. Like any web server, it automatically processes technical request data — such
+          as your IP address, browser type and the page requested — to deliver the site and protect it against abuse.
+          This is necessary to run the site (legitimate interest) and is handled under Vercel's own privacy policy.
+        </p>
+      </section>
+
+      <section>
+        <h2>If you email me</h2>
+        <p>
+          If you write to <a href={`mailto:${site.email}`}>{site.email}</a>, I use your name, email address and message to
+          reply and, if we work together, to prepare and deliver the engagement. I keep that correspondence only as long as
+          needed for that purpose and any legal record-keeping.
+        </p>
+      </section>
+
+      <section>
+        <h2>Links to other sites</h2>
+        <p>
+          The site links to places like
+          <a href={links.linkedin} target="_blank" rel="noopener">LinkedIn</a>,
+          <a href={links.github} target="_blank" rel="noopener">GitHub</a>,
+          <a href={links.dataPortfolio} target="_blank" rel="noopener">my data portfolio</a> and
+          <a href={links.codeRafiki} target="_blank" rel="noopener">Code Rafiki</a>. Once you follow a link, that site's
+          own privacy policy applies.
+        </p>
+      </section>
+
+      <section>
+        <h2>Your rights</h2>
+        <p>
+          Under Kenya's Data Protection Act, 2019 — and the GDPR if you are in the EU or UK — you can ask to access, correct
+          or delete your personal data, object to or restrict its use, receive it in a portable format, and withdraw consent
+          at any time. Email <a href={`mailto:${site.email}`}>{site.email}</a> and I'll respond within 30 days.
+        </p>
+        <p>
+          If you're unhappy with how your data is handled, you can complain to Kenya's
+          <a href="https://www.odpc.go.ke/" target="_blank" rel="noopener">Office of the Data Protection Commissioner</a>,
+          or to your local data protection authority.
+        </p>
+      </section>
+
+      <section>
+        <h2>Children</h2>
+        <p>This site is aimed at businesses and is not directed at children.</p>
+      </section>
+
+      <section>
+        <h2>Changes</h2>
+        <p>
+          If the way this site handles data changes — for example a new tool or a contact form — I'll update this page and
+          the date at the top.
+        </p>
+      </section>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .pv {
+    padding: clamp(56px, 9vw, 120px) var(--pad-x) var(--pad-y);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pv__head {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: clamp(36px, 5vw, 64px);
+  }
+
+  .pv__h1 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(48px, 8vw, 128px);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+  }
+
+  .pv__updated {
+    margin: 0;
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    color: var(--mut);
+  }
+
+  .pv__short {
+    max-width: 760px;
+    padding: 22px 24px;
+    margin-bottom: clamp(40px, 6vw, 72px);
+    background: var(--bg2);
+    border-radius: var(--r-card);
+  }
+
+  .pv__short h2 {
+    margin: 0 0 12px;
+    font-weight: 400;
+  }
+
+  .pv__short ul {
+    margin: 0;
+    padding-left: 1.1em;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--fg);
+  }
+
+  .pv__inline {
+    font: inherit;
+    color: var(--acc);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .pv__body {
+    max-width: 760px;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(32px, 4vw, 48px);
+  }
+
+  .pv__body section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .pv__body h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: clamp(22px, 2vw, 28px);
+    letter-spacing: -0.02em;
+  }
+
+  .pv__body p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--fg2);
+    text-wrap: pretty;
+  }
+
+  .pv__body a,
+  .pv__short a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--line);
+  }
+
+  .pv__body a:hover {
+    color: var(--acc);
+  }
+
+  .pv__table-wrap {
+    overflow-x: auto;
+  }
+
+  .pv__table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  .pv__table th,
+  .pv__table td {
+    text-align: left;
+    vertical-align: top;
+    padding: 12px 14px 12px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pv__table th {
+    font-family: var(--ff-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mut);
+  }
+
+  .pv__table td {
+    color: var(--fg2);
+  }
+
+  .pv__table code {
+    font-family: var(--ff-mono);
+    font-size: 13px;
+    color: var(--fg);
+  }
+</style>

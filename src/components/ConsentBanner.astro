@@ -9,12 +9,15 @@ const COPY = {
   text: 'I use Google Analytics to see which work resonates. No ads, nothing sold. OK to turn it on?',
   allow: 'Allow',
   decline: 'Decline',
+  more: 'Privacy notice',
 };
 ---
 
 <section class="consent" data-consent role="region" aria-labelledby="consent-label" hidden>
   <span id="consent-label" class="label">{COPY.label}</span>
-  <p class="consent__text">{COPY.text}</p>
+  <p class="consent__text">
+    {COPY.text} <a href="/privacy/" class="consent__more">{COPY.more}</a>
+  </p>
   <div class="consent__actions">
     <button type="button" class="consent__btn consent__btn--allow" data-consent-allow>{COPY.allow}</button>
     <button type="button" class="consent__btn" data-consent-decline>{COPY.decline}</button>
@@ -64,6 +67,18 @@ const COPY = {
     line-height: 1.45;
     color: var(--fg2);
     text-wrap: pretty;
+  }
+
+  .consent__more {
+    color: var(--fg);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--line);
+    white-space: nowrap;
+  }
+
+  .consent__more:hover {
+    color: var(--acc);
   }
 
   .consent__actions {
