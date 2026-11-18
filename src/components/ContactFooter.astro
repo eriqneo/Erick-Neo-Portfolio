@@ -82,7 +82,10 @@ const channels = [
   </div>
 
   <div class="footer__bar">
-    <span>© 2026 {site.name}</span>
+    <span class="footer__legal">
+      © 2026 {site.name}
+      <button type="button" class="footer__link footer__cookie" data-consent-open>Cookie settings</button>
+    </span>
     <a href="#top" class="footer__link"><RollText text="Back to top ↑" /></a>
     <span class="footer__sig">
       <Avatar size="22px" decorative />
@@ -240,6 +243,25 @@ const channels = [
       grid-column: 1 / -1;
       grid-row: 1;
     }
+  }
+
+  .footer__legal {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 18px;
+  }
+
+  .footer__cookie {
+    font: inherit;
+    color: var(--mut);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--line);
+  }
+
+  .footer__cookie:hover {
+    color: var(--fg);
   }
 
   .footer__sig {

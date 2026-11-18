@@ -1,0 +1,114 @@
+---
+/**
+ * Analytics consent card (bottom-left). Equal-weight choices, no dark patterns.
+ * Logic in scripts/consent.ts; consent defaults + gated GTM loader in Layout's <head>.
+ * ⚠ New copy — approved to proceed; edit freely.
+ */
+const COPY = {
+  label: 'Cookies',
+  text: 'I use Google Analytics to see which work resonates. No ads, nothing sold. OK to turn it on?',
+  allow: 'Allow',
+  decline: 'Decline',
+};
+---
+
+<section class="consent" data-consent role="region" aria-labelledby="consent-label" hidden>
+  <span id="consent-label" class="label">{COPY.label}</span>
+  <p class="consent__text">{COPY.text}</p>
+  <div class="consent__actions">
+    <button type="button" class="consent__btn consent__btn--allow" data-consent-allow>{COPY.allow}</button>
+    <button type="button" class="consent__btn" data-consent-decline>{COPY.decline}</button>
+  </div>
+</section>
+
+<script>
+  import { initConsent } from '../scripts/consent';
+
+  initConsent();
+</script>
+
+<style>
+  .consent {
+    position: fixed;
+    left: var(--pad-x);
+    bottom: 20px;
+    z-index: 59; /* below the contact drawer (60/61), above page content */
+    width: min(380px, calc(100% - 2 * var(--pad-x)));
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 18px 20px;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--line);
+    border-radius: var(--r-card);
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.45s ease,
+      transform 0.6s var(--ease-out);
+  }
+
+  .consent:global(.is-visible) {
+    opacity: 1;
+    transform: none;
+  }
+
+  .consent[hidden] {
+    display: none;
+  }
+
+  .consent__text {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.45;
+    color: var(--fg2);
+    text-wrap: pretty;
+  }
+
+  .consent__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* equal weight: neither choice is nudged */
+    gap: 8px;
+  }
+
+  .consent__btn {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--r-pill);
+    font-family: var(--ff-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fg);
+    text-align: center;
+    transition:
+      border-color 0.25s ease,
+      background-color 0.25s ease,
+      color 0.25s ease;
+  }
+
+  .consent__btn:hover {
+    border-color: var(--fg);
+  }
+
+  .consent__btn--allow {
+    background: var(--fg);
+    border-color: var(--fg);
+    color: var(--bg);
+  }
+
+  .consent__btn--allow:hover {
+    background: var(--acc);
+    border-color: var(--acc);
+    color: var(--onacc);
+  }
+
+  @media (max-width: 479.98px) {
+    .consent {
+      left: 12px;
+      bottom: 12px;
+      width: calc(100% - 24px);
+    }
+  }
+</style>
