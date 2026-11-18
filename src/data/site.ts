@@ -18,6 +18,8 @@ export const site = {
     alt: 'Portrait of Erick Neo',
   },
   ogImage: '/images/og-image.png',
+  /** Google Tag Manager container (loaded on production builds only). */
+  gtmId: 'GTM-TG85N9GB',
 };
 
 export const links = {

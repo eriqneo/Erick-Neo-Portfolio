@@ -19,6 +19,8 @@ interface Props {
 const { title = site.title, description = site.description, image = site.ogImage, noindex = false } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site);
+// Analytics only on production builds — keeps local dev visits out of the data.
+const gtmId = import.meta.env.PROD ? site.gtmId : null;
 const ogImage = new URL(image, Astro.site);
 
 const jsonLd = {
@@ -40,6 +42,23 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      gtmId && (
+        <script is:inline define:vars={{ gtmId }}>
+          // Google Tag Manager (official loader)
+          (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+            var f = d.getElementsByTagName(s)[0],
+              j = d.createElement(s),
+              dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+          })(window, document, 'script', 'dataLayer', gtmId);
+        </script>
+      )
+    }
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -101,6 +120,18 @@ const jsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
   </head>
   <body>
+    {
+      gtmId && (
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${gtmId}`}
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden"
+            title="Google Tag Manager"></iframe>
+        </noscript>
+      )
+    }
     <AvatarSymbols />
     <div id="page">
       <Nav />
