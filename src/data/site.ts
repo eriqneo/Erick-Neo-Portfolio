@@ -19,7 +19,7 @@ export const site = {
   },
   ogImage: '/images/og-image.png',
   /** Google Tag Manager container (loaded on production builds only). */
-  gtmId: 'GTM-TG85N9GB',
+  gtmId: 'GTM-5QHKTH69',
 };
 
 export const links = {
